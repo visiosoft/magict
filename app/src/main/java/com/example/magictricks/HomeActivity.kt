@@ -1,5 +1,6 @@
 package com.example.magictricks
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,8 +11,7 @@ import com.example.magictricks.adapter.VideoTrickAdapter
 import com.example.magictricks.model.Category
 import com.example.magictricks.model.Trick
 import com.example.magictricks.player.VideoPlayerHelper
-import com.example.magictricks.fragment.VideoPlayerFragment
-import com.example.magictricks.fragment.WatchNowFragment
+import com.example.magictricks.activity.VideoPlayerActivity
 
 class HomeActivity : AppCompatActivity() {
     
@@ -40,10 +40,8 @@ class HomeActivity : AppCompatActivity() {
 
         // Setup Watch Now button
         findViewById<com.google.android.material.button.MaterialButton>(R.id.watchNowButton).setOnClickListener {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, WatchNowFragment.newInstance())
-                .addToBackStack(null)
-                .commit()
+            val intent = Intent(this, VideoPlayerActivity::class.java)
+            startActivity(intent)
         }
 
         // Setup adapters
@@ -68,20 +66,24 @@ class HomeActivity : AppCompatActivity() {
         
         // Trending adapter
         trendingAdapter = VideoTrickAdapter(videoPlayerHelper) { trick ->
-            // Navigate to VideoPlayerFragment
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, VideoPlayerFragment.newInstance(trick))
-                .addToBackStack(null)
-                .commit()
+            // Navigate to VideoPlayerActivity
+            val intent = Intent(this, VideoPlayerActivity::class.java).apply {
+                putExtra("video_url", trick.videoUrl)
+                putExtra("video_title", trick.title)
+                putExtra("video_description", trick.description)
+            }
+            startActivity(intent)
         }
         
         // Short videos adapter
         shortVideosAdapter = VideoTrickAdapter(videoPlayerHelper) { trick ->
-            // Navigate to VideoPlayerFragment
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, VideoPlayerFragment.newInstance(trick))
-                .addToBackStack(null)
-                .commit()
+            // Navigate to VideoPlayerActivity
+            val intent = Intent(this, VideoPlayerActivity::class.java).apply {
+                putExtra("video_url", trick.videoUrl)
+                putExtra("video_title", trick.title)
+                putExtra("video_description", trick.description)
+            }
+            startActivity(intent)
         }
     }
 
