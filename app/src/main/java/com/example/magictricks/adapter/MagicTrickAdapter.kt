@@ -43,6 +43,7 @@ class MagicTrickAdapter(
             binding.apply {
                 tvTitle.text = trick.title
                 tvDuration.text = trick.getFormattedDuration()
+                tvDescription.text = trick.description
                 
                 // Load thumbnail using Glide
                 Glide.with(itemView.context)

@@ -29,11 +29,25 @@
             android:layout_margin="16dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@id/tvDuration"
             app:layout_constraintStart_toEndOf="@id/ivThumbnail"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Amazing Card Trick" />
+
+        <TextView
+            android:id="@+id/tvDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textSize="10sp"
+            android:textColor="#AAAAAA"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivThumbnail"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle"
+            tools:text="Learn this amazing card trick step by step." />
 
         <TextView
             android:id="@+id/tvDuration"
