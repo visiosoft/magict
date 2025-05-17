@@ -17,6 +17,37 @@
             android:orientation="vertical"
             android:background="#0D0D17">
 
+            <!-- Top bar with back button -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="8dp"
+                android:background="#0D0D17">
+
+                <ImageButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_back"
+                    android:tint="#FFFFFF"
+                    android:contentDescription="Back" />
+
+                <TextView
+                    android:id="@+id/tvTopTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="16dp"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+            </LinearLayout>
+
             <androidx.media3.ui.PlayerView
                 android:id="@+id/playerView"
                 android:layout_width="match_parent"
@@ -31,15 +62,6 @@
                 android:orientation="vertical"
                 android:padding="16dp"
                 android:background="#0D0D17">
-
-                <TextView
-                    android:id="@+id/tvTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FFFFFF"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp" />
 
                 <TextView
                     android:id="@+id/tvDescription"
@@ -86,6 +108,14 @@
                         android:contentDescription="Bookmark" />
                 </LinearLayout>
 
+                <!-- Divider above recommended videos -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#222"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -101,7 +131,9 @@
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
                     android:padding="8dp"
-                    android:background="#0D0D17" />
+                    android:background="#181828"
+                    android:layout_marginBottom="24dp"
+                    android:layout_marginTop="0dp" />
 
             </LinearLayout>
 

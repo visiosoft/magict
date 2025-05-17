@@ -15,37 +15,16 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.magictricks.databinding.ActivityVideoPlayerBinding
-import com.example.magictricks.adapter.RecommendedVideosAdapter
-import com.example.magictricks.model.VideoItem
+import com.example.magictricks.adapter.MagicTrickAdapter
+import com.example.magictricks.data.TrickDataProvider
+import com.example.magictricks.model.Trick
 
 @UnstableApi
 class VideoPlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityVideoPlayerBinding
     private lateinit var player: ExoPlayer
-    private lateinit var recommendedVideosAdapter: RecommendedVideosAdapter
+    private lateinit var recommendedVideosAdapter: MagicTrickAdapter
     private val TAG = "VideoPlayerActivity"
-
-    // Sample video data - replace with your actual data source
-    private val recommendedVideos = listOf(
-        VideoItem(
-            "https://storage.googleapis.com/exoplayer-test-media-0/BigBuckBunny_320x180.mp4",
-            "Big Buck Bunny",
-            "10:00",
-            "https://storage.googleapis.com/exoplayer-test-media-0/BigBuckBunny_320x180.mp4"
-        ),
-        VideoItem(
-            "https://storage.googleapis.com/exoplayer-test-media-0/Jazz_In_Paris.mp3",
-            "Jazz in Paris",
-            "5:30",
-            "https://storage.googleapis.com/exoplayer-test-media-0/Jazz_In_Paris.mp3"
-        ),
-        VideoItem(
-            "https://storage.googleapis.com/exoplayer-test-media-0/Sintel_360p.mp4",
-            "Sintel",
-            "15:45",
-            "https://storage.googleapis.com/exoplayer-test-media-0/Sintel_360p.mp4"
-        )
-    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,12 +44,21 @@ class VideoPlayerActivity : AppCompatActivity() {
         setupVideoPlayer()
         setupRecommendedVideos()
         setupUI()
+
+        // Back button functionality
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
     }
 
     private fun setupUI() {
+        // Get title and description from intent
+        val title = intent.getStringExtra("title") ?: "Amazing Magic Trick"
+        val description = intent.getStringExtra("description") ?: "Learn this incredible magic trick that will amaze your friends and family. This tutorial breaks down the technique step by step."
+
         // Set title and description
-        binding.tvTitle.text = "Amazing Magic Trick"
-        binding.tvDescription.text = "Learn this incredible magic trick that will amaze your friends and family. This tutorial breaks down the technique step by step."
+        binding.tvDescription.text = description
+        binding.tvTopTitle.text = title
 
         // Setup share button
         binding.btnShare.setOnClickListener {
@@ -115,26 +103,22 @@ class VideoPlayerActivity : AppCompatActivity() {
     }
 
     private fun setupRecommendedVideos() {
-        try {
-            recommendedVideosAdapter = RecommendedVideosAdapter(recommendedVideos) { videoItem ->
-                // Handle video item click
-                player.stop()
-                val mediaItem = MediaItem.fromUri(videoItem.videoUrl)
-                player.setMediaItem(mediaItem)
-                player.prepare()
-                player.playWhenReady = true
-            }
-
-            binding.recommendedVideosRecyclerView.apply {
-                layoutManager = LinearLayoutManager(this@VideoPlayerActivity)
-                adapter = recommendedVideosAdapter
-                setHasFixedSize(true)
-                visibility = View.VISIBLE
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error setting up recommended videos", e)
-            Toast.makeText(this, "Error loading recommended videos: ${e.message}", Toast.LENGTH_LONG).show()
+        recommendedVideosAdapter = MagicTrickAdapter { trick ->
+            playVideo(trick.videoUrl)
         }
+        binding.recommendedVideosRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@VideoPlayerActivity)
+            adapter = recommendedVideosAdapter
+        }
+        recommendedVideosAdapter.submitList(TrickDataProvider.getTrendingTricks())
+    }
+
+    private fun playVideo(videoUrl: String) {
+        player.stop()
+        val mediaItem = MediaItem.fromUri(videoUrl)
+        player.setMediaItem(mediaItem)
+        player.prepare()
+        player.playWhenReady = true
     }
 
     override fun onDestroy() {
