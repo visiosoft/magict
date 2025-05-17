@@ -2,6 +2,7 @@ package com.example.magictricks
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +13,7 @@ import com.example.magictricks.model.Category
 import com.example.magictricks.model.Trick
 import com.example.magictricks.player.VideoPlayerHelper
 import com.example.magictricks.activity.VideoPlayerActivity
+import coil.load
 
 class HomeActivity : AppCompatActivity() {
     
@@ -37,6 +39,11 @@ class HomeActivity : AppCompatActivity() {
         trendingRecyclerView = findViewById(R.id.trendingRecyclerView)
         shortVideosRecyclerView = findViewById(R.id.shortVideosRecyclerView)
         bottomNavigation = findViewById(R.id.bottomNavigation)
+
+        // Load hero image with Coil
+        findViewById<ImageView>(R.id.heroImage).load("https://i.ibb.co/Q4Jw22m/magictricks-min.png") {
+            crossfade(true)
+        }
 
         // Setup Watch Now button
         findViewById<com.google.android.material.button.MaterialButton>(R.id.watchNowButton).setOnClickListener {
