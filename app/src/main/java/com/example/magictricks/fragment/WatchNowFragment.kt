@@ -18,7 +18,7 @@ class WatchNowFragment : Fragment() {
     private lateinit var videoPlayerHelper: VideoPlayerHelper
 
     // You can set your featured/default video URL here
-    private val featuredVideoUrl = "https://example.com/videos/card-vanish.mp4"
+    private val featuredVideoUrl = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
     private val featuredTitle = "Featured Magic Trick"
     private val featuredDescription = "Watch this amazing featured trick!"
 
@@ -40,10 +40,9 @@ class WatchNowFragment : Fragment() {
     }
 
     private fun setupPlayer() {
-        val player = videoPlayerHelper.createPlayer(requireContext())
-        binding.playerView.player = player
+        videoPlayerHelper.createPlayer()
+        binding.playerView.player = videoPlayerHelper.getPlayer()
         videoPlayerHelper.preparePlayer(android.net.Uri.parse(featuredVideoUrl))
-        player.playWhenReady = true
     }
 
     private fun setupUI() {
