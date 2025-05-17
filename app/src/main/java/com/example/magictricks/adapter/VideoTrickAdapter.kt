@@ -34,7 +34,7 @@ class VideoTrickAdapter(
 
     override fun onViewRecycled(holder: VideoViewHolder) {
         super.onViewRecycled(holder)
-        if (holder.adapterPosition == currentPlayingPosition) {
+        if (holder.bindingAdapterPosition == currentPlayingPosition) {
             stopPlayback()
         }
         Glide.with(holder.itemView.context).clear(holder.binding.ivThumbnail)
@@ -67,7 +67,8 @@ class VideoTrickAdapter(
 
     inner class VideoViewHolder(val binding: ItemVideoTrickBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.root.setOnClickListener {
+            // Set click listener for the Watch Now button
+            binding.btnWatchNow.setOnClickListener {
                 val position = bindingAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     onTrickClick(getItem(position))

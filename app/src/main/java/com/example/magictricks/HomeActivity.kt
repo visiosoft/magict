@@ -10,6 +10,8 @@ import com.example.magictricks.adapter.VideoTrickAdapter
 import com.example.magictricks.model.Category
 import com.example.magictricks.model.Trick
 import com.example.magictricks.player.VideoPlayerHelper
+import com.example.magictricks.fragment.VideoPlayerFragment
+import com.example.magictricks.fragment.WatchNowFragment
 
 class HomeActivity : AppCompatActivity() {
     
@@ -36,6 +38,14 @@ class HomeActivity : AppCompatActivity() {
         shortVideosRecyclerView = findViewById(R.id.shortVideosRecyclerView)
         bottomNavigation = findViewById(R.id.bottomNavigation)
 
+        // Setup Watch Now button
+        findViewById<com.google.android.material.button.MaterialButton>(R.id.watchNowButton).setOnClickListener {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, WatchNowFragment.newInstance())
+                .addToBackStack(null)
+                .commit()
+        }
+
         // Setup adapters
         setupAdapters()
         
@@ -58,14 +68,20 @@ class HomeActivity : AppCompatActivity() {
         
         // Trending adapter
         trendingAdapter = VideoTrickAdapter(videoPlayerHelper) { trick ->
-            // Handle trick click
-            // TODO: Navigate to trick detail
+            // Navigate to VideoPlayerFragment
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, VideoPlayerFragment.newInstance(trick))
+                .addToBackStack(null)
+                .commit()
         }
         
         // Short videos adapter
         shortVideosAdapter = VideoTrickAdapter(videoPlayerHelper) { trick ->
-            // Handle trick click
-            // TODO: Navigate to trick detail
+            // Navigate to VideoPlayerFragment
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, VideoPlayerFragment.newInstance(trick))
+                .addToBackStack(null)
+                .commit()
         }
     }
 
@@ -140,6 +156,7 @@ class HomeActivity : AppCompatActivity() {
             Trick(
                 id = "1",
                 title = "Amazing Card Vanish",
+                description = "Learn this impressive card vanish trick that will leave your audience amazed. Perfect for beginners!",
                 videoUrl = "https://example.com/videos/card-vanish.mp4",
                 thumbnailUrl = "https://example.com/thumbnails/card-vanish.jpg",
                 duration = 180,
@@ -150,6 +167,7 @@ class HomeActivity : AppCompatActivity() {
             Trick(
                 id = "2",
                 title = "Mind-Blowing Coin Magic",
+                description = "Master the art of coin manipulation with this advanced technique. A must-learn for coin magic enthusiasts.",
                 videoUrl = "https://example.com/videos/coin-magic.mp4",
                 thumbnailUrl = "https://example.com/thumbnails/coin-magic.jpg",
                 duration = 240,

@@ -9,6 +9,7 @@ data class Trick(
     @DocumentId
     val id: String = "",
     val title: String = "",
+    val description: String = "",
     val videoUrl: String = "",
     val thumbnailUrl: String = "",
     val duration: Int = 0,
@@ -25,6 +26,7 @@ data class Trick(
      */
     fun toMap(): Map<String, Any?> = mapOf(
         "title" to title,
+        "description" to description,
         "videoUrl" to videoUrl,
         "thumbnailUrl" to thumbnailUrl,
         "duration" to duration,
@@ -56,6 +58,7 @@ data class Trick(
             return Trick(
                 id = id,
                 title = data["title"] as? String ?: "",
+                description = data["description"] as? String ?: "",
                 videoUrl = data["videoUrl"] as? String ?: "",
                 thumbnailUrl = data["thumbnailUrl"] as? String ?: "",
                 duration = (data["duration"] as? Number)?.toInt() ?: 0,
