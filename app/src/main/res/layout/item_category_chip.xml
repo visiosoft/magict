@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="@drawable/ripple_effect"
+    app:cardBackgroundColor="@color/category_unselected"
+    app:cardCornerRadius="@dimen/category_chip_corner_radius"
+    app:cardElevation="@dimen/category_unselected_elevation">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/category_chip_padding">
+
+        <ImageView
+            android:id="@+id/ivCategoryIcon"
+            android:layout_width="@dimen/category_icon_size"
+            android:layout_height="@dimen/category_icon_size"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@string/category_icon"
+            app:tint="@color/category_text_unselected"
+            tools:src="@drawable/ic_card_trick" />
+
+        <TextView
+            android:id="@+id/tvCategoryName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/category_text_unselected"
+            android:textSize="@dimen/category_text_size"
+            android:text="Card Tricks" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView> 

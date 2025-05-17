@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="default_margin">16dp</dimen>
+    <dimen name="category_selected_elevation">4dp</dimen>
+    <dimen name="category_unselected_elevation">2dp</dimen>
+    <dimen name="category_chip_corner_radius">12dp</dimen>
+    <dimen name="category_chip_padding">12dp</dimen>
+    <dimen name="category_icon_size">24dp</dimen>
+    <dimen name="category_text_size">14sp</dimen>
+</resources> 

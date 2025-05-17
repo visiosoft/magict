@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NewMagicTricks</string>
+    <string name="app_name">Magic Tricks</string>
+    <string name="category_icon">Category icon</string>
+    <string name="trick_thumbnail">Trick thumbnail</string>
 </resources>
