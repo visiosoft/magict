@@ -17,7 +17,9 @@ import upworksolutions.themagictricks.player.VideoPlayerHelper
 import upworksolutions.themagictricks.activity.VideoPlayerActivity
 import coil.load
 import upworksolutions.themagictricks.data.TrickDataProvider
+import androidx.media3.common.util.UnstableApi
 
+@UnstableApi
 class HomeActivity : AppCompatActivity() {
     
     private lateinit var categoriesRecyclerView: RecyclerView
