@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import upworksolutions.themagictricks.R
-import upworksolutions.themagictricks.databinding.ItemMagicTrickBinding
+import upworksolutions.themagictricks.databinding.ItemRecommendedVideoBinding
 import upworksolutions.themagictricks.model.Trick
 
 class MagicTrickAdapter(
@@ -16,7 +16,11 @@ class MagicTrickAdapter(
 ) : ListAdapter<Trick, MagicTrickAdapter.TrickViewHolder>(TrickDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrickViewHolder {
-        val binding = ItemMagicTrickBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemRecommendedVideoBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return TrickViewHolder(binding)
     }
 
@@ -29,7 +33,7 @@ class MagicTrickAdapter(
         Glide.with(holder.itemView.context).clear(holder.binding.ivThumbnail)
     }
 
-    inner class TrickViewHolder(val binding: ItemMagicTrickBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class TrickViewHolder(val binding: ItemRecommendedVideoBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener {
                 val position = bindingAdapterPosition
@@ -43,13 +47,13 @@ class MagicTrickAdapter(
             binding.apply {
                 tvTitle.text = trick.title
                 tvDuration.text = trick.getFormattedDuration()
-                tvDescription.text = trick.description
-                
-                // Load thumbnail using Glide
-                Glide.with(itemView.context)
+
+                // Load thumbnail using Glide with proper configuration
+                Glide.with(ivThumbnail)
                     .load(trick.thumbnailUrl)
-                    .placeholder(R.drawable.placeholder_thumbnail)
+                    .placeholder(R.drawable.loading_thumbnail)
                     .error(R.drawable.error_thumbnail)
+                    .centerCrop()
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(ivThumbnail)
             }

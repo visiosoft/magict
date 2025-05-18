@@ -3,6 +3,8 @@ package upworksolutions.themagictricks
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -52,6 +54,17 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Setup More buttons
+        findViewById<TextView>(R.id.trendingMoreButton).setOnClickListener {
+            // TODO: Navigate to full trending list
+            Toast.makeText(this, "View all trending tricks", Toast.LENGTH_SHORT).show()
+        }
+
+        findViewById<TextView>(R.id.forYouMoreButton).setOnClickListener {
+            // TODO: Navigate to full For You list
+            Toast.makeText(this, "View all recommended tricks", Toast.LENGTH_SHORT).show()
+        }
+
         // Setup adapters
         setupAdapters()
         
@@ -74,24 +87,12 @@ class HomeActivity : AppCompatActivity() {
         
         // Trending adapter
         trendingAdapter = VideoTrickAdapter(videoPlayerHelper) { trick ->
-            // Navigate to VideoPlayerActivity
-            val intent = Intent(this, VideoPlayerActivity::class.java).apply {
-                putExtra("video_url", trick.videoUrl)
-                putExtra("title", trick.title)
-                putExtra("description", trick.description)
-            }
-            startActivity(intent)
+            // Click handling is now done in the adapter
         }
         
         // Short videos adapter
         shortVideosAdapter = VideoTrickAdapter(videoPlayerHelper) { trick ->
-            // Navigate to VideoPlayerActivity
-            val intent = Intent(this, VideoPlayerActivity::class.java).apply {
-                putExtra("video_url", trick.videoUrl)
-                putExtra("title", trick.title)
-                putExtra("description", trick.description)
-            }
-            startActivity(intent)
+            // Click handling is now done in the adapter
         }
     }
 
@@ -120,7 +121,7 @@ class HomeActivity : AppCompatActivity() {
         shortVideosRecyclerView.apply {
             layoutManager = LinearLayoutManager(
                 this@HomeActivity,
-                LinearLayoutManager.VERTICAL,
+                LinearLayoutManager.HORIZONTAL,
                 false
             )
             adapter = shortVideosAdapter
@@ -169,6 +170,11 @@ class HomeActivity : AppCompatActivity() {
 
     private fun loadTricksForCategory(category: Category) {
         // TODO: Implement category filtering
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadInitialData()
     }
 
     override fun onDestroy() {

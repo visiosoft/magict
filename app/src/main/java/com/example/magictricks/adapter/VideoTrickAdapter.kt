@@ -1,5 +1,6 @@
 package upworksolutions.themagictricks.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -11,6 +12,7 @@ import upworksolutions.themagictricks.R
 import upworksolutions.themagictricks.databinding.ItemVideoTrickBinding
 import upworksolutions.themagictricks.model.Trick
 import upworksolutions.themagictricks.player.VideoPlayerHelper
+import upworksolutions.themagictricks.activity.VideoPlayerActivity
 import androidx.media3.common.util.UnstableApi
 
 @UnstableApi
@@ -71,7 +73,29 @@ class VideoTrickAdapter(
             binding.btnWatchNow.setOnClickListener {
                 val position = bindingAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    onTrickClick(getItem(position))
+                    val trick = getItem(position)
+                    val context = itemView.context
+                    val intent = Intent(context, VideoPlayerActivity::class.java).apply {
+                        putExtra("video_url", trick.videoUrl)
+                        putExtra("title", trick.title)
+                        putExtra("description", trick.description)
+                    }
+                    context.startActivity(intent)
+                }
+            }
+
+            // Set click listener for the entire item
+            binding.root.setOnClickListener {
+                val position = bindingAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val trick = getItem(position)
+                    val context = itemView.context
+                    val intent = Intent(context, VideoPlayerActivity::class.java).apply {
+                        putExtra("video_url", trick.videoUrl)
+                        putExtra("title", trick.title)
+                        putExtra("description", trick.description)
+                    }
+                    context.startActivity(intent)
                 }
             }
         }

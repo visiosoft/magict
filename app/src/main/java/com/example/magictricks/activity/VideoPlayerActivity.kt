@@ -119,6 +119,13 @@ class VideoPlayerActivity : AppCompatActivity() {
         player.setMediaItem(mediaItem)
         player.prepare()
         player.playWhenReady = true
+
+        // Find the trick that matches this video URL
+        val trick = TrickDataProvider.getTrendingTricks().find { it.videoUrl == videoUrl }
+        trick?.let {
+            binding.tvTopTitle.text = it.title
+            binding.tvDescription.text = it.description
+        }
     }
 
     override fun onDestroy() {
