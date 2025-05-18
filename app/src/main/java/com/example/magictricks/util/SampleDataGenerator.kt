@@ -1,6 +1,6 @@
-package com.example.magictricks.util
+package upworksolutions.themagictricks.util
 
-import com.example.magictricks.model.Trick
+import upworksolutions.themagictricks.model.Trick
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject

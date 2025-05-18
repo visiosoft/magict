@@ -1,6 +1,6 @@
-package com.example.magictricks.repository
+package upworksolutions.themagictricks.repository
 
-import com.example.magictricks.model.Trick
+import upworksolutions.themagictricks.model.Trick
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.flow.Flow

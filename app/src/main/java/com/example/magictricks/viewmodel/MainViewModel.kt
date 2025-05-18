@@ -1,9 +1,9 @@
-package com.example.magictricks.viewmodel
+package upworksolutions.themagictricks.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.magictricks.model.Trick
-import com.example.magictricks.repository.TricksRepository
+import upworksolutions.themagictricks.model.Trick
+import upworksolutions.themagictricks.repository.TricksRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

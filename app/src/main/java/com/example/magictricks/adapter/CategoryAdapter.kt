@@ -1,11 +1,11 @@
-package com.example.magictricks.adapter
+package upworksolutions.themagictricks.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.magictricks.databinding.ItemCategoryChipBinding
+import upworksolutions.themagictricks.databinding.ItemCategoryChipBinding
 
 data class Category(
     val id: String,

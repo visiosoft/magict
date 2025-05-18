@@ -1,4 +1,4 @@
-package com.example.magictricks
+package upworksolutions.themagictricks
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,14 +7,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.example.magictricks.adapter.HorizontalCategoriesAdapter
-import com.example.magictricks.adapter.VideoTrickAdapter
-import com.example.magictricks.model.Category
-import com.example.magictricks.model.Trick
-import com.example.magictricks.player.VideoPlayerHelper
-import com.example.magictricks.activity.VideoPlayerActivity
+import upworksolutions.themagictricks.adapter.HorizontalCategoriesAdapter
+import upworksolutions.themagictricks.adapter.VideoTrickAdapter
+import upworksolutions.themagictricks.model.Category
+import upworksolutions.themagictricks.model.Trick
+import upworksolutions.themagictricks.player.VideoPlayerHelper
+import upworksolutions.themagictricks.activity.VideoPlayerActivity
 import coil.load
-import com.example.magictricks.data.TrickDataProvider
+import upworksolutions.themagictricks.data.TrickDataProvider
 
 class HomeActivity : AppCompatActivity() {
     

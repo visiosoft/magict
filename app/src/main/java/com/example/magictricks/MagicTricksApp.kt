@@ -1,4 +1,4 @@
-package com.example.magictricks
+package upworksolutions.themagictricks
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

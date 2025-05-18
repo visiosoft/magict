@@ -1,4 +1,4 @@
-package com.example.magictricks.layout
+package upworksolutions.themagictricks.layout
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,8 +6,8 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.abs
-import com.example.magictricks.adapter.VideoTrickAdapter
-import com.example.magictricks.animation.VideoTrickItemAnimator
+import upworksolutions.themagictricks.adapter.VideoTrickAdapter
+import upworksolutions.themagictricks.animation.VideoTrickItemAnimator
 import androidx.media3.common.util.UnstableApi
 
 @UnstableApi

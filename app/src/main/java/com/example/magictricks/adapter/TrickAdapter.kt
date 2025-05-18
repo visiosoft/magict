@@ -1,4 +1,4 @@
-package com.example.magictricks.adapter
+package upworksolutions.themagictricks.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.magictricks.databinding.ItemMagicTrickBinding
-import com.example.magictricks.model.Trick
+import upworksolutions.themagictricks.databinding.ItemMagicTrickBinding
+import upworksolutions.themagictricks.model.Trick
 
 class TrickAdapter(
     private val onItemClick: (Trick) -> Unit,

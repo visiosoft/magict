@@ -1,4 +1,4 @@
-package com.example.magictricks.fragment
+package upworksolutions.themagictricks.fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.magictricks.activity.VideoPlayerActivity
-import com.example.magictricks.databinding.FragmentHomeBinding
+import upworksolutions.themagictricks.activity.VideoPlayerActivity
+import upworksolutions.themagictricks.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 

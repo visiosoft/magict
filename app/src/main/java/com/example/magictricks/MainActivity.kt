@@ -1,4 +1,4 @@
-package com.example.magictricks
+package upworksolutions.themagictricks
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

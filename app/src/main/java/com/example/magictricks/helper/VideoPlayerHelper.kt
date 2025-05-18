@@ -1,4 +1,4 @@
-package com.example.magictricks.helper
+package upworksolutions.themagictricks.helper
 
 import android.content.Context
 import android.net.Uri

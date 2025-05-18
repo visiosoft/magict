@@ -8,15 +8,15 @@ plugins {
 }
 
 android {
-    namespace = "com.example.magictricks"
+    namespace = "upworksolutions.themagictricks"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.magictricks"
+        applicationId = "upworksolutions.themagictricks"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 125
+        versionName = "125"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

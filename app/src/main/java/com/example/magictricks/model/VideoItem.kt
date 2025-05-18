@@ -1,4 +1,4 @@
-package com.example.magictricks.model
+package upworksolutions.themagictricks.model
 
 data class VideoItem(
     val thumbnailUrl: String,

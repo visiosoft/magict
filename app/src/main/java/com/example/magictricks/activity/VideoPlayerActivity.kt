@@ -1,4 +1,4 @@
-package com.example.magictricks.activity
+package upworksolutions.themagictricks.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,10 +14,10 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.magictricks.databinding.ActivityVideoPlayerBinding
-import com.example.magictricks.adapter.MagicTrickAdapter
-import com.example.magictricks.data.TrickDataProvider
-import com.example.magictricks.model.Trick
+import upworksolutions.themagictricks.databinding.ActivityVideoPlayerBinding
+import upworksolutions.themagictricks.adapter.MagicTrickAdapter
+import upworksolutions.themagictricks.data.TrickDataProvider
+import upworksolutions.themagictricks.model.Trick
 
 @UnstableApi
 class VideoPlayerActivity : AppCompatActivity() {

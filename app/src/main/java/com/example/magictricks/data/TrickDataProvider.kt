@@ -1,6 +1,6 @@
-package com.example.magictricks.data
+package upworksolutions.themagictricks.data
 
-import com.example.magictricks.model.Trick
+import upworksolutions.themagictricks.model.Trick
 
 object TrickDataProvider {
     fun getTrendingTricks(): List<Trick> = listOf(

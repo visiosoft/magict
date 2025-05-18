@@ -1,4 +1,4 @@
-package com.example.magictricks.model
+package upworksolutions.themagictricks.model
 
 import android.os.Parcelable
 import com.google.firebase.firestore.DocumentId

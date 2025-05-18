@@ -1,4 +1,4 @@
-package com.example.magictricks.animation
+package upworksolutions.themagictricks.animation
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter

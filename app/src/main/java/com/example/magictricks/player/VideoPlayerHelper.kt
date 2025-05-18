@@ -1,4 +1,4 @@
-package com.example.magictricks.player
+package upworksolutions.themagictricks.player
 
 import android.content.Context
 import android.net.Uri

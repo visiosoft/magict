@@ -1,6 +1,6 @@
-package com.example.magictricks.di
+package upworksolutions.themagictricks.di
 
-import com.example.magictricks.repository.TricksRepository
+import upworksolutions.themagictricks.repository.TricksRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides

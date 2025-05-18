@@ -1,4 +1,4 @@
-package com.example.magictricks.adapter
+package upworksolutions.themagictricks.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.example.magictricks.R
-import com.example.magictricks.databinding.ItemVideoTrickBinding
-import com.example.magictricks.model.Trick
-import com.example.magictricks.player.VideoPlayerHelper
+import upworksolutions.themagictricks.R
+import upworksolutions.themagictricks.databinding.ItemVideoTrickBinding
+import upworksolutions.themagictricks.model.Trick
+import upworksolutions.themagictricks.player.VideoPlayerHelper
 import androidx.media3.common.util.UnstableApi
 
 @UnstableApi

@@ -1,4 +1,4 @@
-package com.example.magictricks.adapter
+package upworksolutions.themagictricks.adapter
 
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
@@ -8,9 +8,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.magictricks.R
-import com.example.magictricks.databinding.ItemCategoryChipBinding
-import com.example.magictricks.model.Category
+import upworksolutions.themagictricks.R
+import upworksolutions.themagictricks.databinding.ItemCategoryChipBinding
+import upworksolutions.themagictricks.model.Category
 
 class HorizontalCategoriesAdapter(
     private val onCategorySelected: (Category) -> Unit

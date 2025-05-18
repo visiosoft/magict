@@ -1,4 +1,4 @@
-package com.example.magictricks.util
+package upworksolutions.themagictricks.util
 
 import android.content.Context
 import android.graphics.Bitmap
