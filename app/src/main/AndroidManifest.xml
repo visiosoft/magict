@@ -4,6 +4,7 @@
     package="upworksolutions.themagictricks">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
     <application
         android:allowBackup="true"
@@ -16,6 +17,11 @@
         android:theme="@style/Theme.MagicTricks"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
+        <!-- AdMob app ID -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-9773068853653447~1453749099"/>
 
         <activity
             android:name=".HomeActivity"

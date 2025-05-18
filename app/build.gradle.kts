@@ -15,8 +15,8 @@ android {
         applicationId = "upworksolutions.themagictricks"
         minSdk = 24
         targetSdk = 34
-        versionCode = 125
-        versionName = "125"
+        versionCode = 126
+        versionName = "126"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -65,6 +65,9 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    
+    // AdMob
+    implementation("com.google.android.gms:play-services-ads:22.6.0")
     
     // Architecture Components
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")

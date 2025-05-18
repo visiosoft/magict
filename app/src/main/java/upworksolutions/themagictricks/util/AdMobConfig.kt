@@ -1,0 +1,36 @@
+package upworksolutions.themagictricks.util
+
+object AdMobConfig {
+    // App ID
+    const val APP_ID = "ca-app-pub-9773068853653447~1453749099"
+
+    // Test Ad Unit IDs
+    object Test {
+        const val BANNER_AD_UNIT_ID = "ca-app-pub-3940256099942544/6300978111"
+        const val INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-3940256099942544/1033173712"
+        const val REWARDED_AD_UNIT_ID = "ca-app-pub-3940256099942544/5224354917"
+    }
+
+    // Production Ad Unit IDs
+    object Production {
+        const val BANNER_AD_UNIT_ID = "ca-app-pub-9773068853653447/1453749099"
+        const val INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-9773068853653447/2798620351"
+        const val REWARDED_AD_UNIT_ID = "ca-app-pub-9773068853653447/1453749099"
+    }
+
+    // Current environment
+    private const val IS_TESTING = false
+
+    // Get current ad unit IDs based on environment
+    fun getBannerAdUnitId(): String {
+        return if (IS_TESTING) Test.BANNER_AD_UNIT_ID else Production.BANNER_AD_UNIT_ID
+    }
+
+    fun getInterstitialAdUnitId(): String {
+        return if (IS_TESTING) Test.INTERSTITIAL_AD_UNIT_ID else Production.INTERSTITIAL_AD_UNIT_ID
+    }
+
+    fun getRewardedAdUnitId(): String {
+        return if (IS_TESTING) Test.REWARDED_AD_UNIT_ID else Production.REWARDED_AD_UNIT_ID
+    }
+} 

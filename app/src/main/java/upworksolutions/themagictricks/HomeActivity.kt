@@ -9,12 +9,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import upworksolutions.themagictricks.adapter.HorizontalCategoriesAdapter
 import upworksolutions.themagictricks.adapter.VideoTrickAdapter
 import upworksolutions.themagictricks.model.Category
 import upworksolutions.themagictricks.model.Trick
 import upworksolutions.themagictricks.player.VideoPlayerHelper
 import upworksolutions.themagictricks.activity.VideoPlayerActivity
+import upworksolutions.themagictricks.util.AdMobConfig
 import coil.load
 import upworksolutions.themagictricks.data.TrickDataProvider
 import androidx.media3.common.util.UnstableApi
@@ -26,6 +32,8 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var trendingRecyclerView: RecyclerView
     private lateinit var shortVideosRecyclerView: RecyclerView
     private lateinit var bottomNavigation: BottomNavigationView
+    private lateinit var adView: AdView
+    private var mInterstitialAd: InterstitialAd? = null
     
     private lateinit var categoriesAdapter: HorizontalCategoriesAdapter
     private lateinit var trendingAdapter: VideoTrickAdapter
@@ -36,6 +44,11 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        // Initialize AdMob
+        MobileAds.initialize(this) { initializationStatus ->
+            // Initialization complete
+        }
+
         // Initialize VideoPlayerHelper
         videoPlayerHelper = VideoPlayerHelper.getInstance(this)
 
@@ -44,6 +57,14 @@ class HomeActivity : AppCompatActivity() {
         trendingRecyclerView = findViewById(R.id.trendingRecyclerView)
         shortVideosRecyclerView = findViewById(R.id.shortVideosRecyclerView)
         bottomNavigation = findViewById(R.id.bottomNavigation)
+        adView = findViewById(R.id.adView)
+
+        // Load banner ad
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
+
+        // Load interstitial ad
+        loadInterstitialAd()
 
         // Load hero image with Coil
         findViewById<ImageView>(R.id.heroImage).load("https://i.ibb.co/Q4Jw22m/magictricks-min.png") {
@@ -52,19 +73,28 @@ class HomeActivity : AppCompatActivity() {
 
         // Setup Watch Now button
         findViewById<com.google.android.material.button.MaterialButton>(R.id.watchNowButton).setOnClickListener {
-            val intent = Intent(this, VideoPlayerActivity::class.java)
-            startActivity(intent)
+            showInterstitialAd {
+                val intent = Intent(this, VideoPlayerActivity::class.java).apply {
+                    putExtra("videoUrl", "https://archive.org/serve/TikTok-7241210541224561946/7241210541224561946.ia.mp4")
+                    putExtra("videoTitle", "Featured Magic Trick")
+                }
+                startActivity(intent)
+            }
         }
 
         // Setup More buttons
         findViewById<TextView>(R.id.trendingMoreButton).setOnClickListener {
-            // TODO: Navigate to full trending list
-            Toast.makeText(this, "View all trending tricks", Toast.LENGTH_SHORT).show()
+            showInterstitialAd {
+                // TODO: Navigate to full trending list
+                Toast.makeText(this, "View all trending tricks", Toast.LENGTH_SHORT).show()
+            }
         }
 
         findViewById<TextView>(R.id.forYouMoreButton).setOnClickListener {
-            // TODO: Navigate to full For You list
-            Toast.makeText(this, "View all recommended tricks", Toast.LENGTH_SHORT).show()
+            showInterstitialAd {
+                // TODO: Navigate to full For You list
+                Toast.makeText(this, "View all recommended tricks", Toast.LENGTH_SHORT).show()
+            }
         }
 
         // Setup adapters
@@ -78,6 +108,45 @@ class HomeActivity : AppCompatActivity() {
         
         // Load initial data
         loadInitialData()
+    }
+
+    private fun loadInterstitialAd() {
+        val adRequest = AdRequest.Builder().build()
+        InterstitialAd.load(
+            this,
+            AdMobConfig.getInterstitialAdUnitId(),
+            adRequest,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    mInterstitialAd = interstitialAd
+                }
+
+                override fun onAdFailedToLoad(loadAdError: com.google.android.gms.ads.LoadAdError) {
+                    mInterstitialAd = null
+                }
+            }
+        )
+    }
+
+    private fun showInterstitialAd(onAdClosed: () -> Unit) {
+        if (mInterstitialAd != null) {
+            mInterstitialAd?.fullScreenContentCallback = object : com.google.android.gms.ads.FullScreenContentCallback() {
+                override fun onAdDismissedFullScreenContent() {
+                    mInterstitialAd = null
+                    loadInterstitialAd() // Load the next interstitial
+                    onAdClosed()
+                }
+
+                override fun onAdFailedToShowFullScreenContent(adError: com.google.android.gms.ads.AdError) {
+                    mInterstitialAd = null
+                    loadInterstitialAd() // Load the next interstitial
+                    onAdClosed()
+                }
+            }
+            mInterstitialAd?.show(this)
+        } else {
+            onAdClosed()
+        }
     }
 
     private fun setupAdapters() {
@@ -174,13 +243,20 @@ class HomeActivity : AppCompatActivity() {
         // TODO: Implement category filtering
     }
 
+    override fun onPause() {
+        adView.pause()
+        super.onPause()
+    }
+
     override fun onResume() {
         super.onResume()
+        adView.resume()
         loadInitialData()
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        adView.destroy()
         videoPlayerHelper.release()
+        super.onDestroy()
     }
 } 

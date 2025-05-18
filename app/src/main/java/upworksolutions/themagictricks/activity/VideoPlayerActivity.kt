@@ -84,7 +84,8 @@ class VideoPlayerActivity : AppCompatActivity() {
     private fun setupVideoPlayer() {
         try {
             // Get video URL from intent or use default
-            val videoUrl = intent.getStringExtra("video_url") 
+            val videoUrl = intent.getStringExtra("videoUrl") 
+                ?: intent.getStringExtra("video_url")
                 ?: "https://storage.googleapis.com/exoplayer-test-media-0/BigBuckBunny_320x180.mp4"
             
             Log.d(TAG, "Setting up video player with URL: $videoUrl")
