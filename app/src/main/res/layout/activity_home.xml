@@ -178,7 +178,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/trendingRecyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
+                    android:layout_height="200dp"
                     android:orientation="horizontal"
                     android:clipToPadding="false"
                     android:paddingStart="16dp"
@@ -218,12 +218,32 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/shortVideosRecyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
+                    android:layout_height="200dp"
                     android:orientation="horizontal"
                     android:clipToPadding="false"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:layout_marginBottom="80dp"/>
+                    android:layout_marginBottom="24dp"/>
+
+                <!-- Tip of the Day Card -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginBottom="80dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/quotesRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:clipToPadding="false"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"/>
+
+                </FrameLayout>
 
             </LinearLayout>
 

@@ -9,6 +9,7 @@ object AdMobConfig {
         const val BANNER_AD_UNIT_ID = "ca-app-pub-3940256099942544/6300978111"
         const val INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-3940256099942544/1033173712"
         const val REWARDED_AD_UNIT_ID = "ca-app-pub-3940256099942544/5224354917"
+        const val APP_OPEN_AD_UNIT_ID = "ca-app-pub-3940256099942544/3419835294"
     }
 
     // Production Ad Unit IDs
@@ -16,6 +17,7 @@ object AdMobConfig {
         const val BANNER_AD_UNIT_ID = "ca-app-pub-9773068853653447/1453749099"
         const val INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-9773068853653447/2798620351"
         const val REWARDED_AD_UNIT_ID = "ca-app-pub-9773068853653447/1453749099"
+        const val APP_OPEN_AD_UNIT_ID = "ca-app-pub-9773068853653447/1453749099"
     }
 
     // Current environment
@@ -32,5 +34,9 @@ object AdMobConfig {
 
     fun getRewardedAdUnitId(): String {
         return if (IS_TESTING) Test.REWARDED_AD_UNIT_ID else Production.REWARDED_AD_UNIT_ID
+    }
+
+    fun getAppOpenAdUnitId(): String {
+        return if (IS_TESTING) Test.APP_OPEN_AD_UNIT_ID else Production.APP_OPEN_AD_UNIT_ID
     }
 } 

@@ -8,14 +8,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.android.gms.ads.appopen.AppOpenAd
+import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback
 import upworksolutions.themagictricks.adapter.HorizontalCategoriesAdapter
 import upworksolutions.themagictricks.adapter.VideoTrickAdapter
+import upworksolutions.themagictricks.adapter.QuoteAdapter
 import upworksolutions.themagictricks.model.Category
 import upworksolutions.themagictricks.model.Trick
 import upworksolutions.themagictricks.player.VideoPlayerHelper
@@ -24,6 +28,15 @@ import upworksolutions.themagictricks.util.AdMobConfig
 import coil.load
 import upworksolutions.themagictricks.data.TrickDataProvider
 import androidx.media3.common.util.UnstableApi
+import upworksolutions.themagictricks.util.HorizontalSpaceItemDecoration
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.SupervisorJob
 
 @UnstableApi
 class HomeActivity : AppCompatActivity() {
@@ -34,11 +47,15 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var bottomNavigation: BottomNavigationView
     private lateinit var adView: AdView
     private var mInterstitialAd: InterstitialAd? = null
+    private var appOpenAd: AppOpenAd? = null
+    private var isShowingAd = false
     
     private lateinit var categoriesAdapter: HorizontalCategoriesAdapter
     private lateinit var trendingAdapter: VideoTrickAdapter
     private lateinit var shortVideosAdapter: VideoTrickAdapter
     private lateinit var videoPlayerHelper: VideoPlayerHelper
+    private lateinit var quotesRecyclerView: RecyclerView
+    private val quotesAdapter: QuoteAdapter by lazy { QuoteAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +64,7 @@ class HomeActivity : AppCompatActivity() {
         // Initialize AdMob
         MobileAds.initialize(this) { initializationStatus ->
             // Initialization complete
+            loadAppOpenAd()
         }
 
         // Initialize VideoPlayerHelper
@@ -58,6 +76,7 @@ class HomeActivity : AppCompatActivity() {
         shortVideosRecyclerView = findViewById(R.id.shortVideosRecyclerView)
         bottomNavigation = findViewById(R.id.bottomNavigation)
         adView = findViewById(R.id.adView)
+        quotesRecyclerView = findViewById(R.id.quotesRecyclerView)
 
         // Load banner ad
         val adRequest = AdRequest.Builder().build()
@@ -108,6 +127,55 @@ class HomeActivity : AppCompatActivity() {
         
         // Load initial data
         loadInitialData()
+
+        // Setup quotes
+        setupQuotes()
+    }
+
+    private fun loadAppOpenAd() {
+        val request = AdRequest.Builder().build()
+        AppOpenAd.load(
+            this,
+            AdMobConfig.getAppOpenAdUnitId(),
+            request,
+            AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
+            object : AppOpenAdLoadCallback() {
+                override fun onAdLoaded(ad: AppOpenAd) {
+                    appOpenAd = ad
+                    showAppOpenAd()
+                }
+
+                override fun onAdFailedToLoad(loadAdError: com.google.android.gms.ads.LoadAdError) {
+                    appOpenAd = null
+                }
+            }
+        )
+    }
+
+    private fun showAppOpenAd() {
+        if (isShowingAd) {
+            return
+        }
+
+        appOpenAd?.fullScreenContentCallback = object : com.google.android.gms.ads.FullScreenContentCallback() {
+            override fun onAdDismissedFullScreenContent() {
+                appOpenAd = null
+                isShowingAd = false
+                loadAppOpenAd()
+            }
+
+            override fun onAdFailedToShowFullScreenContent(adError: com.google.android.gms.ads.AdError) {
+                appOpenAd = null
+                isShowingAd = false
+                loadAppOpenAd()
+            }
+
+            override fun onAdShowedFullScreenContent() {
+                isShowingAd = true
+            }
+        }
+
+        appOpenAd?.show(this)
     }
 
     private fun loadInterstitialAd() {
@@ -168,34 +236,36 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerViews() {
-        // Categories RecyclerView
-        categoriesRecyclerView.apply {
-            layoutManager = LinearLayoutManager(
-                this@HomeActivity,
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
-            adapter = categoriesAdapter
-        }
-        
-        // Trending RecyclerView
+        // Setup Trending Videos RecyclerView
         trendingRecyclerView.apply {
-            layoutManager = LinearLayoutManager(
-                this@HomeActivity,
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
+            layoutManager = LinearLayoutManager(this@HomeActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = trendingAdapter
+            setHasFixedSize(true)
+            addItemDecoration(HorizontalSpaceItemDecoration(8))
         }
-        
-        // Short Videos RecyclerView
+
+        // Setup Categories RecyclerView
+        categoriesRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@HomeActivity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = categoriesAdapter
+            setHasFixedSize(true)
+            addItemDecoration(HorizontalSpaceItemDecoration(8))
+        }
+
+        // Setup Short Videos RecyclerView
         shortVideosRecyclerView.apply {
-            layoutManager = LinearLayoutManager(
-                this@HomeActivity,
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
+            layoutManager = LinearLayoutManager(this@HomeActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = shortVideosAdapter
+            setHasFixedSize(true)
+            addItemDecoration(HorizontalSpaceItemDecoration(8))
+        }
+
+        // Setup Quotes RecyclerView (no auto-scrolling)
+        quotesRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@HomeActivity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = quotesAdapter
+            setHasFixedSize(true)
+            addItemDecoration(HorizontalSpaceItemDecoration(8))
         }
     }
 
@@ -243,6 +313,18 @@ class HomeActivity : AppCompatActivity() {
         // TODO: Implement category filtering
     }
 
+    private fun setupQuotes() {
+        quotesRecyclerView.apply {
+            layoutManager = LinearLayoutManager(
+                this@HomeActivity,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            adapter = quotesAdapter
+            addItemDecoration(HorizontalSpaceItemDecoration(resources.getDimensionPixelSize(R.dimen.recycler_item_spacing)))
+        }
+    }
+
     override fun onPause() {
         adView.pause()
         super.onPause()
@@ -252,6 +334,9 @@ class HomeActivity : AppCompatActivity() {
         super.onResume()
         adView.resume()
         loadInitialData()
+        if (!isShowingAd) {
+            showAppOpenAd()
+        }
     }
 
     override fun onDestroy() {

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import upworksolutions.themagictricks.activity.VideoPlayerActivity
 import upworksolutions.themagictricks.databinding.FragmentHomeBinding
 
+@OptIn(androidx.media3.common.util.UnstableApi::class)
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
@@ -22,6 +23,8 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    @Suppress("UnsafeOptInUsageError")
+    @androidx.media3.common.util.UnstableApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
