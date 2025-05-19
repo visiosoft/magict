@@ -4,15 +4,16 @@ import upworksolutions.themagictricks.model.Trick
 
 object TrickDataProvider {
     fun getTrendingTricks(): List<Trick> = listOf(
-        Trick(
+        
+Trick(
             id = "1",
-            title = "Amazing Donut Vanished",
-            description = "Learn this impressive donut vanish trick that will leave your audience amazed. Perfect for beginners!",
-            videoUrl = "https://raw.githubusercontent.com/visiosoft/videostreaming/main/donut.mp4",
-            thumbnailUrl = "https://i.ytimg.com/vi/cqNSka76wBA/hq720.jpg",
-            duration = 180,
-            categories = listOf("Card Tricks"),
-            isPro = false,
+            title = "Funny Magic Tricks And DIY Illusions That You Can Do",
+            description = "3 Magic Tricks Anyone Can Do",
+            videoUrl = "https://raw.githubusercontent.com/visiosoft/videostreaming/main/cup.mp4",
+            thumbnailUrl = "https://img.youtube.com/vi/lP8k1hrcb98/hqdefault.jpg",
+            duration = 240,
+            categories = listOf("Coin Magic"),
+            isPro = true,
             isFeatured = true
         ),
         Trick(
@@ -47,6 +48,19 @@ object TrickDataProvider {
             categories = listOf("Coin Magic"),
             isPro = true,
             isFeatured = true
-        )
+        ),Trick(
+            id = "5",
+            title = "Amazing Donut Vanished",
+            description = "Learn this impressive donut vanish trick that will leave your audience amazed. Perfect for beginners!",
+            videoUrl = "https://raw.githubusercontent.com/visiosoft/videostreaming/main/donut.mp4",
+            thumbnailUrl = "https://i.ytimg.com/vi/cqNSka76wBA/hq720.jpg",
+            duration = 180,
+            categories = listOf("Card Tricks"),
+            isPro = false,
+            isFeatured = true
+        ),
+
+
+
     )
 } 
