@@ -87,25 +87,26 @@
                 <!-- Hero Banner Section -->
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="300dp">
+                    android:layout_height="400dp">
 
                     <ImageView
                         android:id="@+id/heroImage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
+                        android:src="@drawable/hero_image"
                         android:contentDescription="Featured Magic Trick"/>
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/watchNowButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <ImageView
+                        android:id="@+id/heroPlayIcon"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
                         android:layout_gravity="center"
-                        android:text="Watch Now"
-                        android:textSize="18sp"
-                        android:paddingHorizontal="32dp"
-                        android:paddingVertical="16dp"
-                        app:cornerRadius="24dp"/>
+                        android:src="@drawable/ic_play_circle"
+                        android:contentDescription="Play Featured Magic Trick"
+                        android:background="@android:color/transparent"
+                        android:clickable="true"
+                        android:focusable="true"/>
                 </FrameLayout>
 
                 <!-- AdMob Banner Ad -->

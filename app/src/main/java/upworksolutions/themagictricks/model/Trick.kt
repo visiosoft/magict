@@ -16,8 +16,7 @@ data class Trick(
     val categories: List<String> = emptyList(),
     val isPro: Boolean = false,
     val isFeatured: Boolean = false,
-    val isLiked: Boolean = false,
-    val isSaved: Boolean = false
+    val difficulty: String = "Beginner"
 ) : Parcelable {
     
     /**
@@ -33,8 +32,7 @@ data class Trick(
         "categories" to categories,
         "isPro" to isPro,
         "isFeatured" to isFeatured,
-        "isLiked" to isLiked,
-        "isSaved" to isSaved
+        "difficulty" to difficulty
     )
 
     /**
@@ -65,8 +63,7 @@ data class Trick(
                 categories = (data["categories"] as? List<*>)?.filterIsInstance<String>() ?: emptyList(),
                 isPro = data["isPro"] as? Boolean ?: false,
                 isFeatured = data["isFeatured"] as? Boolean ?: false,
-                isLiked = data["isLiked"] as? Boolean ?: false,
-                isSaved = data["isSaved"] as? Boolean ?: false
+                difficulty = data["difficulty"] as? String ?: "Beginner"
             )
         }
     }

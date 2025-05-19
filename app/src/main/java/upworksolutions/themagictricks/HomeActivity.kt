@@ -42,6 +42,7 @@ import kotlin.math.abs
 import upworksolutions.themagictricks.model.TipCard
 import upworksolutions.themagictricks.adapter.TipCardAdapter
 import upworksolutions.themagictricks.activity.TipDetailActivity
+import upworksolutions.themagictricks.fragment.CategoryVideosFragment
 
 @UnstableApi
 class HomeActivity : AppCompatActivity() {
@@ -93,12 +94,14 @@ class HomeActivity : AppCompatActivity() {
         loadInterstitialAd()
 
         // Load hero image with Coil
-        findViewById<ImageView>(R.id.heroImage).load("https://i.ibb.co/Q4Jw22m/magictricks-min.png") {
+        findViewById<ImageView>(R.id.heroImage).load("https://raw.githubusercontent.com/visiosoft/mypaperlessoffice.org/main/hero.png") {
             crossfade(true)
+            error(R.drawable.hero_image)
+            size(1080, 1920) // Load high resolution
         }
 
-        // Setup Watch Now button
-        findViewById<com.google.android.material.button.MaterialButton>(R.id.watchNowButton).setOnClickListener {
+        // Setup Play Icon click
+        findViewById<ImageView>(R.id.heroPlayIcon).setOnClickListener {
             showInterstitialAd {
                 val intent = Intent(this, VideoPlayerActivity::class.java).apply {
                     putExtra("videoUrl", "https://archive.org/serve/TikTok-7241210541224561946/7241210541224561946.ia.mp4")
@@ -230,8 +233,8 @@ class HomeActivity : AppCompatActivity() {
     private fun setupAdapters() {
         // Categories adapter
         categoriesAdapter = HorizontalCategoriesAdapter { category ->
-            // Handle category selection
-            loadTricksForCategory(category)
+            // Show category videos fragment
+            showCategoryVideos(category)
         }
         
         // Trending adapter
@@ -243,6 +246,14 @@ class HomeActivity : AppCompatActivity() {
         shortVideosAdapter = VideoTrickAdapter(videoPlayerHelper) { trick ->
             // Click handling is now done in the adapter
         }
+    }
+
+    private fun showCategoryVideos(category: Category) {
+        val fragment = CategoryVideosFragment.newInstance(category)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun setupRecyclerViews() {
