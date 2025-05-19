@@ -133,7 +133,7 @@
                     android:textStyle="bold"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginBottom="16dp"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/categoriesRecyclerView"
@@ -142,7 +142,8 @@
                     android:orientation="horizontal"
                     android:clipToPadding="false"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"/>
+                    android:paddingEnd="16dp"
+                    android:layout_marginBottom="24dp"/>
 
                 <!-- Trending Tutorials Section -->
                 <LinearLayout
@@ -152,8 +153,7 @@
                     android:gravity="center_vertical"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="16dp">
 
                     <TextView
                         android:layout_width="0dp"
@@ -182,7 +182,25 @@
                     android:orientation="horizontal"
                     android:clipToPadding="false"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"/>
+                    android:paddingEnd="16dp"
+                    android:layout_marginBottom="24dp"/>
+
+                <TextView
+                    android:id="@+id/tipOfTheDayTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Trick of The Day"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="16dp"/>
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/tipCardsViewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:layout_marginBottom="24dp"/>
 
                 <!-- Short Videos Feed -->
                 <LinearLayout
@@ -192,8 +210,7 @@
                     android:gravity="center_vertical"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="16dp">
 
                     <TextView
                         android:layout_width="0dp"
@@ -229,8 +246,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginBottom="80dp"
+                    android:layout_marginBottom="32dp"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp">
 
@@ -244,6 +260,11 @@
                         android:paddingEnd="8dp"/>
 
                 </FrameLayout>
+
+                <!-- Extra space at the bottom -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"/>
 
             </LinearLayout>
 

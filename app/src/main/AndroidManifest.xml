@@ -46,5 +46,10 @@
             android:launchMode="standard"
             android:configChanges="orientation|screenSize|keyboardHidden" />
 
+        <activity
+            android:name=".activity.TipDetailActivity"
+            android:theme="@style/Theme.MagicTricks.NoActionBar"
+            android:exported="false" />
+
     </application>
 </manifest>

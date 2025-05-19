@@ -37,6 +37,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.SupervisorJob
+import androidx.viewpager2.widget.ViewPager2
+import kotlin.math.abs
+import upworksolutions.themagictricks.model.TipCard
+import upworksolutions.themagictricks.adapter.TipCardAdapter
+import upworksolutions.themagictricks.activity.TipDetailActivity
 
 @UnstableApi
 class HomeActivity : AppCompatActivity() {
@@ -44,6 +49,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var categoriesRecyclerView: RecyclerView
     private lateinit var trendingRecyclerView: RecyclerView
     private lateinit var shortVideosRecyclerView: RecyclerView
+    private lateinit var tipCardsViewPager: ViewPager2
     private lateinit var bottomNavigation: BottomNavigationView
     private lateinit var adView: AdView
     private var mInterstitialAd: InterstitialAd? = null
@@ -74,6 +80,7 @@ class HomeActivity : AppCompatActivity() {
         categoriesRecyclerView = findViewById(R.id.categoriesRecyclerView)
         trendingRecyclerView = findViewById(R.id.trendingRecyclerView)
         shortVideosRecyclerView = findViewById(R.id.shortVideosRecyclerView)
+        tipCardsViewPager = findViewById(R.id.tipCardsViewPager)
         bottomNavigation = findViewById(R.id.bottomNavigation)
         adView = findViewById(R.id.adView)
         quotesRecyclerView = findViewById(R.id.quotesRecyclerView)
@@ -130,6 +137,9 @@ class HomeActivity : AppCompatActivity() {
 
         // Setup quotes
         setupQuotes()
+
+        // Setup tip cards
+        setupTipCards()
     }
 
     private fun loadAppOpenAd() {
@@ -323,6 +333,64 @@ class HomeActivity : AppCompatActivity() {
             adapter = quotesAdapter
             addItemDecoration(HorizontalSpaceItemDecoration(resources.getDimensionPixelSize(R.dimen.recycler_item_spacing)))
         }
+    }
+
+    private fun setupTipCards() {
+        val tipCards = listOf(
+            TipCard(
+                id = "1",
+                title = "Vanishing Coin",
+                description = "Make objects disappear with this classic sleight of hand! Perfect for beginners, this trick will amaze your audience with its simplicity and effectiveness.",
+                backgroundImageUrl = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                difficulty = "Beginner",
+                secretTip = "Misdirection is key! Keep your audience's attention on your other hand while performing the vanish."
+            ),
+            TipCard(
+                id = "2",
+                title = "Card Levitation",
+                description = "Defy gravity with this mesmerizing card trick! Learn to make cards float and dance in the air, creating an illusion that will leave your audience spellbound.",
+                backgroundImageUrl = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                difficulty = "Intermediate",
+                secretTip = "Practice the thumb palm technique until it becomes second nature. The smoother your movements, the more magical the effect."
+            ),
+            TipCard(
+                id = "3",
+                title = "Mind Reading",
+                description = "Amaze your audience by predicting their thoughts! This psychological illusion combines subtle cues with clever techniques to create a truly mind-bending experience.",
+                backgroundImageUrl = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                difficulty = "Advanced",
+                secretTip = "Use psychological forcing techniques to guide their choices. The key is to make them feel like they have complete freedom while subtly influencing their decisions."
+            )
+        )
+
+        val tipCardAdapter = TipCardAdapter(
+            onCardClick = { card ->
+                // Handle card click - show detailed view
+                showInterstitialAd {
+                    val intent = Intent(this, TipDetailActivity::class.java).apply {
+                        putExtra("tip_card", card)
+                    }
+                    startActivity(intent)
+                }
+            },
+            onFavoriteClick = { card ->
+                // Handle favorite click
+                Toast.makeText(this, "Added ${card.title} to favorites", Toast.LENGTH_SHORT).show()
+            }
+        )
+
+        tipCardsViewPager.apply {
+            adapter = tipCardAdapter
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            // Add page transformer for 3D effect
+            setPageTransformer { page, position ->
+                val r = 1 - abs(position)
+                page.scaleY = 0.85f + r * 0.15f
+                page.rotationY = position * -30
+            }
+        }
+
+        tipCardAdapter.submitList(tipCards)
     }
 
     override fun onPause() {
