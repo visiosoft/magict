@@ -94,12 +94,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:contentDescription="Featured Magic Trick" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/gradient_overlay" />
+                        android:contentDescription="Featured Magic Trick"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/watchNowButton"
@@ -110,7 +105,7 @@
                         android:textSize="18sp"
                         android:paddingHorizontal="32dp"
                         android:paddingVertical="16dp"
-                        app:cornerRadius="24dp" />
+                        app:cornerRadius="24dp"/>
                 </FrameLayout>
 
                 <!-- AdMob Banner Ad -->
