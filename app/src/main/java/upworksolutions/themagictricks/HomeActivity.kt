@@ -324,8 +324,8 @@ class HomeActivity : AppCompatActivity() {
         )
         categoriesAdapter.submitList(categories)
 
-        // Load trending tricks from data provider
-        val trendingTricks = TrickDataProvider.getTrendingTricks()
+        // Load trending tricks from JSON
+        val trendingTricks = TrickDataProvider.getTrendingTricks(this)
         trendingAdapter.submitList(trendingTricks)
         shortVideosAdapter.submitList(trendingTricks)
     }

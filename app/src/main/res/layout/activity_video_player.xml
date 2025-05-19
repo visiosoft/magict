@@ -56,6 +56,16 @@
                 app:resize_mode="fit"
                 android:background="#000000" />
 
+            <!-- Banner Ad -->
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/bannerAdView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:adSize="BANNER"
+                app:adUnitId="@string/banner_ad_unit_id" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

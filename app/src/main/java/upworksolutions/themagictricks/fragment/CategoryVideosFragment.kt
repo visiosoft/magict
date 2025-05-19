@@ -73,12 +73,9 @@ class CategoryVideosFragment : Fragment() {
     }
 
     private fun loadVideos() {
-        // Get all tricks and filter by category
-        val allTricks = TrickDataProvider.getTrendingTricks()
-        val categoryTricks = allTricks.filter { trick ->
-            trick.categories.contains(category.name)
-        }
-        videoAdapter.submitList(categoryTricks)
+        val allTricks = TrickDataProvider.getTrendingTricks(requireContext())
+        val filteredTricks = allTricks.filter { it.categories.contains(category.name) }
+        videoAdapter.submitList(filteredTricks)
     }
 
     override fun onDestroyView() {

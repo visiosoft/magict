@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1022204389565",
+    "project_id": "newmagictricks-65b7f",
+    "storage_bucket": "newmagictricks-65b7f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022204389565:android:5d7539eaf48c4088a1efd4",
+        "android_client_info": {
+          "package_name": "upworksolutions.themagictricks"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDtB5JWOaj4DocQO2lYDpfTHgW4dt-KTQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      },
+      "admob_app_id": "ca-app-pub-9773068853653447~5630707376"
+    }
+  ],
+  "configuration_version": "1"
+}

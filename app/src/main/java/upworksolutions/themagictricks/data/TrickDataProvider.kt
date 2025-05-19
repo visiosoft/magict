@@ -1,66 +1,43 @@
 package upworksolutions.themagictricks.data
 
+import android.content.Context
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import upworksolutions.themagictricks.model.Trick
 
 object TrickDataProvider {
-    fun getTrendingTricks(): List<Trick> = listOf(
-        
-Trick(
-            id = "1",
-            title = "Funny Magic Tricks And DIY Illusions That You Can Do",
-            description = "3 Magic Tricks Anyone Can Do",
-            videoUrl = "https://raw.githubusercontent.com/visiosoft/videostreaming/main/cup.mp4",
-            thumbnailUrl = "https://img.youtube.com/vi/lP8k1hrcb98/hqdefault.jpg",
-            duration = 240,
-            categories = listOf("Coin Magic"),
-            isPro = true,
-            isFeatured = true
-        ),
-        Trick(
-            id = "2",
-            title = "Mind-Blowing Coin Magic",
-            description = "IMPOSSIBLE Coin Tricks Anyone Can Do",
-            videoUrl = "https://raw.githubusercontent.com/visiosoft/videostreaming/main/2.mp4",
-            thumbnailUrl = "https://i.ytimg.com/vi/0V9qnde2Rcc/hq720.jpg",
-            duration = 240,
-            categories = listOf("Coin Magic"),
-            isPro = true,
-            isFeatured = true
-        ),
-        Trick(
-            id = "3",
-            title = "Funny Magic Tricks Secret Revealed",
-            description = "Pencil Tricks Anyone Can Do",
-            videoUrl = "https://raw.githubusercontent.com/visiosoft/videostreaming/main/3.mp4",
-            thumbnailUrl = "https://i.ytimg.com/vi/yy1u9pHDm5k/hq720_2.jpg",
-            duration = 240,
-            categories = listOf("Coin Magic"),
-            isPro = true,
-            isFeatured = true
-        ),
-        Trick(
-            id = "4",
-            title = "Funny Magic Tricks And DIY Illusions That You Can Do",
-            description = "3 Magic Tricks Anyone Can Do",
-            videoUrl = "https://raw.githubusercontent.com/visiosoft/videostreaming/main/4.mp4",
-            thumbnailUrl = "https://raw.githubusercontent.com/visiosoft/videostreaming/main/4.jpg",
-            duration = 240,
-            categories = listOf("Coin Magic"),
-            isPro = true,
-            isFeatured = true
-        ),Trick(
-            id = "5",
-            title = "Amazing Donut Vanished",
-            description = "Learn this impressive donut vanish trick that will leave your audience amazed. Perfect for beginners!",
-            videoUrl = "https://raw.githubusercontent.com/visiosoft/videostreaming/main/donut.mp4",
-            thumbnailUrl = "https://i.ytimg.com/vi/cqNSka76wBA/hq720.jpg",
-            duration = 180,
-            categories = listOf("Card Tricks"),
-            isPro = false,
-            isFeatured = true
-        ),
+    private var tricks: List<Trick>? = null
 
+    fun getTrendingTricks(context: Context): List<Trick> {
+        if (tricks == null) {
+            loadTricksFromJson(context)
+        }
+        return tricks ?: emptyList()
+    }
 
+    private fun loadTricksFromJson(context: Context) {
+        try {
+            val jsonString = context.assets.open("tricks.json").bufferedReader().use { it.readText() }
+            val type = object : TypeToken<TricksResponse>() {}.type
+            val response = Gson().fromJson<TricksResponse>(jsonString, type)
+            tricks = response.tricks
+        } catch (e: Exception) {
+            e.printStackTrace()
+            tricks = emptyList()
+        }
+    }
 
-    )
+    fun getTricksByCategory(context: Context, category: String): List<Trick> {
+        if (tricks == null) {
+            loadTricksFromJson(context)
+        }
+        return tricks?.filter { it.categories.contains(category) } ?: emptyList()
+    }
+
+    fun getFeaturedTricks(context: Context): List<Trick> {
+        if (tricks == null) {
+            loadTricksFromJson(context)
+        }
+        return tricks?.filter { it.isFeatured } ?: emptyList()
+    }
 } 

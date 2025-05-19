@@ -1,0 +1,92 @@
+{
+    "tricks": [
+      {
+        "id": "1",
+        "title": "Funny Magic Tricks And DIY Illusions That You Can Do",
+        "description": "3 Magic Tricks Anyone Can Do",
+        "videoUrl": "https://raw.githubusercontent.com/visiosoft/videostreaming/main/cup.mp4",
+        "thumbnailUrl": "https://img.youtube.com/vi/lP8k1hrcb98/hqdefault.jpg",
+        "duration": 145,
+        "categories": ["Coin Magic"],
+        "isPro": true,
+        "isFeatured": true
+      },
+      {
+        "id": "2",
+        "title": "Mind-Blowing Coin Magic",
+        "description": "IMPOSSIBLE Coin Tricks Anyone Can Do",
+        "videoUrl": "https://raw.githubusercontent.com/visiosoft/videostreaming/main/2.mp4",
+        "thumbnailUrl": "https://i.ytimg.com/vi/0V9qnde2Rcc/hq720.jpg",
+        "duration": 130,
+        "categories": ["Coin Magic"],
+        "isPro": true,
+        "isFeatured": true
+      },
+      {
+        "id": "3",
+        "title": "Funny Magic Tricks Secret Revealed",
+        "description": "Pencil Tricks Anyone Can Do",
+        "videoUrl": "https://raw.githubusercontent.com/visiosoft/videostreaming/main/3.mp4",
+        "thumbnailUrl": "https://i.ytimg.com/vi/yy1u9pHDm5k/hq720_2.jpg",
+        "duration": 185,
+        "categories": ["Coin Magic"],
+        "isPro": true,
+        "isFeatured": true
+      },
+      {
+        "id": "4",
+        "title": "Funny Magic Tricks And DIY Illusions That You Can Do",
+        "description": "3 Magic Tricks Anyone Can Do",
+        "videoUrl": "https://raw.githubusercontent.com/visiosoft/videostreaming/main/4.mp4",
+        "thumbnailUrl": "https://raw.githubusercontent.com/visiosoft/videostreaming/main/4.jpg",
+        "duration": 125,
+        "categories": ["Coin Magic"],
+        "isPro": true,
+        "isFeatured": true
+      },
+      {
+        "id": "5",
+        "title": "Amazing Donut Vanished",
+        "description": "Learn this impressive donut vanish trick that will leave your audience amazed. Perfect for beginners!",
+        "videoUrl": "https://raw.githubusercontent.com/visiosoft/videostreaming/main/donut.mp4",
+        "thumbnailUrl": "https://i.ytimg.com/vi/cqNSka76wBA/hq720.jpg",
+        "duration": 140,
+        "categories": ["Card Tricks"],
+        "isPro": false,
+        "isFeatured": true
+      },
+      {
+        "id": "6",
+        "title": "Amazing Rubber Band Tricks",
+        "description": "Learn this impressive Rubber Band trick that will leave your audience amazed. Perfect for beginners!",
+        "videoUrl": "https://raw.githubusercontent.com/visiosoft/videostreaming/main/rubberband.mp4",
+        "thumbnailUrl": "https://img.youtube.com/vi/65PmIz6NyT0/hqdefault.jpg",
+        "duration": 100,
+        "categories": ["Card Tricks"],
+        "isPro": false,
+        "isFeatured": true
+      },
+      {
+        "id": "7",
+        "title": "Majedar Stick Trick",
+        "description": "Learn this strick trick that will leave your audience amazed. Perfect for beginners!",
+        "videoUrl": "https://raw.githubusercontent.com/visiosoft/videostreaming/main/6.mp4",
+        "thumbnailUrl": "https://img.youtube.com/vi/onefil8tYrg/hqdefault.jpg",
+        "duration": 100,
+        "categories": ["Card Tricks"],
+        "isPro": false,
+        "isFeatured": true
+      },
+      {
+        "id": "8",
+        "title": "Reveal unique magic tricks with two funny magicians ",
+        "description": "Reveal unique magic tricks with two funny magicians. Perfect for beginners!",
+        "videoUrl": "https://raw.githubusercontent.com/visiosoft/videostreaming/main/7.mp4",
+        "thumbnailUrl": "https://img.youtube.com/vi/p8E4pFtVGh0/hqdefault.jpg",
+        "duration": 100,
+        "categories": ["Card Tricks"],
+        "isPro": false,
+        "isFeatured": true
+      }
+    ]
+  }

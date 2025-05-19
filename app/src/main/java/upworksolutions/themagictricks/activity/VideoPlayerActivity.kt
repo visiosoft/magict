@@ -18,6 +18,8 @@ import upworksolutions.themagictricks.databinding.ActivityVideoPlayerBinding
 import upworksolutions.themagictricks.adapter.MagicTrickAdapter
 import upworksolutions.themagictricks.data.TrickDataProvider
 import upworksolutions.themagictricks.model.Trick
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
 
 @UnstableApi
 class VideoPlayerActivity : AppCompatActivity() {
@@ -44,11 +46,17 @@ class VideoPlayerActivity : AppCompatActivity() {
         setupVideoPlayer()
         setupRecommendedVideos()
         setupUI()
+        setupBannerAd()
 
         // Back button functionality
         binding.btnBack.setOnClickListener {
             finish()
         }
+    }
+
+    private fun setupBannerAd() {
+        val adRequest = AdRequest.Builder().build()
+        binding.bannerAdView.loadAd(adRequest)
     }
 
     private fun setupUI() {
@@ -111,7 +119,7 @@ class VideoPlayerActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@VideoPlayerActivity)
             adapter = recommendedVideosAdapter
         }
-        recommendedVideosAdapter.submitList(TrickDataProvider.getTrendingTricks())
+        recommendedVideosAdapter.submitList(TrickDataProvider.getTrendingTricks(this))
     }
 
     private fun playVideo(videoUrl: String) {
@@ -122,15 +130,26 @@ class VideoPlayerActivity : AppCompatActivity() {
         player.playWhenReady = true
 
         // Find the trick that matches this video URL
-        val trick = TrickDataProvider.getTrendingTricks().find { it.videoUrl == videoUrl }
+        val trick = TrickDataProvider.getTrendingTricks(this).find { it.videoUrl == videoUrl }
         trick?.let {
             binding.tvTopTitle.text = it.title
             binding.tvDescription.text = it.description
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        binding.bannerAdView.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.bannerAdView.resume()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        binding.bannerAdView.destroy()
         if (::player.isInitialized) {
             player.release()
         }
