@@ -2,17 +2,22 @@ package upworksolutions.themagictricks.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.launch
 import upworksolutions.themagictricks.adapter.CategoryVideoAdapter
 import upworksolutions.themagictricks.databinding.FragmentCategoryVideosBinding
 import upworksolutions.themagictricks.model.Category
 import upworksolutions.themagictricks.player.VideoPlayerHelper
 import upworksolutions.themagictricks.data.TrickDataProvider
 import upworksolutions.themagictricks.activity.VideoPlayerActivity
+import upworksolutions.themagictricks.util.AdManager
+import upworksolutions.themagictricks.model.Trick
 
 class CategoryVideosFragment : Fragment() {
     private var _binding: FragmentCategoryVideosBinding? = null
@@ -21,6 +26,9 @@ class CategoryVideosFragment : Fragment() {
     private lateinit var videoPlayerHelper: VideoPlayerHelper
     private lateinit var videoAdapter: CategoryVideoAdapter
     private lateinit var category: Category
+    private lateinit var adManager: AdManager
+    private var isReturningFromPlayer = false
+    private val TAG = "CategoryVideosFragment"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +49,11 @@ class CategoryVideosFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
+        // Initialize AdManager using singleton instance
+        adManager = AdManager.getInstance(requireContext())
+        
         setupViews()
-        loadVideos()
+        loadCategoryTricks()
     }
 
     private fun setupViews() {
@@ -57,12 +68,16 @@ class CategoryVideosFragment : Fragment() {
 
         // Setup RecyclerView
         videoAdapter = CategoryVideoAdapter(videoPlayerHelper) { trick ->
-            // Launch video player activity
-            val intent = Intent(requireContext(), VideoPlayerActivity::class.java).apply {
-                putExtra("videoUrl", trick.videoUrl)
-                putExtra("videoTitle", trick.title)
+            if (!isReturningFromPlayer) {
+                // Show ad only when user explicitly clicks on a video
+                adManager.showInterstitialAd {
+                    val intent = Intent(requireContext(), VideoPlayerActivity::class.java).apply {
+                        putExtra("videoUrl", trick.videoUrl)
+                        putExtra("videoTitle", trick.title)
+                    }
+                    startActivity(intent)
+                }
             }
-            startActivity(intent)
         }
 
         binding.recyclerView.apply {
@@ -72,14 +87,37 @@ class CategoryVideosFragment : Fragment() {
         }
     }
 
-    private fun loadVideos() {
-        val allTricks = TrickDataProvider.getTrendingTricks(requireContext())
-        val filteredTricks = allTricks.filter { it.categories.contains(category.name) }
-        videoAdapter.submitList(filteredTricks)
+    private fun loadCategoryTricks() {
+        lifecycleScope.launch {
+            try {
+                val tricks = TrickDataProvider.getTricksByCategory(requireContext(), category.name)
+                // Update UI with category tricks
+                updateCategoryTricks(tricks)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error loading category tricks", e)
+            }
+        }
+    }
+
+    private fun updateCategoryTricks(tricks: List<Trick>) {
+        videoAdapter.submitList(tricks)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Reset the returning flag when the fragment resumes
+        isReturningFromPlayer = false
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Set the returning flag when the fragment is paused
+        isReturningFromPlayer = true
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        isReturningFromPlayer = false
         _binding = null
     }
 

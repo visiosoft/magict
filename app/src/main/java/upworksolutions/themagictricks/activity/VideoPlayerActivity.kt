@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
@@ -20,6 +21,7 @@ import upworksolutions.themagictricks.data.TrickDataProvider
 import upworksolutions.themagictricks.model.Trick
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
+import kotlinx.coroutines.launch
 
 @UnstableApi
 class VideoPlayerActivity : AppCompatActivity() {
@@ -119,7 +121,19 @@ class VideoPlayerActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@VideoPlayerActivity)
             adapter = recommendedVideosAdapter
         }
-        recommendedVideosAdapter.submitList(TrickDataProvider.getTrendingTricks(this))
+        loadRelatedTricks()
+    }
+
+    private fun loadRelatedTricks() {
+        lifecycleScope.launch {
+            try {
+                val tricks = TrickDataProvider.getTrendingTricks(this@VideoPlayerActivity)
+                // Update UI with related tricks
+                updateRelatedTricks(tricks)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error loading related tricks", e)
+            }
+        }
     }
 
     private fun playVideo(videoUrl: String) {
@@ -129,12 +143,18 @@ class VideoPlayerActivity : AppCompatActivity() {
         player.prepare()
         player.playWhenReady = true
 
-        // Find the trick that matches this video URL
-        val trick = TrickDataProvider.getTrendingTricks(this).find { it.videoUrl == videoUrl }
-        trick?.let {
-            binding.tvTopTitle.text = it.title
-            binding.tvDescription.text = it.description
+        lifecycleScope.launch {
+            val tricks = TrickDataProvider.getTrendingTricks(this@VideoPlayerActivity)
+            val trick = tricks.find { it.videoUrl == videoUrl }
+            trick?.let {
+                binding.tvTopTitle.text = it.title
+                binding.tvDescription.text = it.description
+            }
         }
+    }
+
+    private fun updateRelatedTricks(tricks: List<Trick>) {
+        recommendedVideosAdapter.submitList(tricks)
     }
 
     override fun onPause() {

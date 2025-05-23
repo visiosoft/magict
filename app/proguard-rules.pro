@@ -19,3 +19,21 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Keep JSON-related classes
+-keep class upworksolutions.themagictricks.data.TricksResponse { *; }
+-keep class upworksolutions.themagictricks.model.Trick { *; }
+-keep class upworksolutions.themagictricks.data.TrickDataProvider { *; }
+
+# Keep Gson
+-keepattributes Signature
+-keepattributes *Annotation*
+-dontwarn sun.misc.**
+-keep class com.google.gson.** { *; }
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
+
+# Keep assets
+-keep class **.R$* { *; }
+-keepclassmembers class **.R$* { *; }

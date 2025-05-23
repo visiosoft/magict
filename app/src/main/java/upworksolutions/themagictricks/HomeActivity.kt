@@ -43,6 +43,9 @@ import upworksolutions.themagictricks.model.TipCard
 import upworksolutions.themagictricks.adapter.TipCardAdapter
 import upworksolutions.themagictricks.activity.TipDetailActivity
 import upworksolutions.themagictricks.fragment.CategoryVideosFragment
+import upworksolutions.themagictricks.util.AdManager
+import android.util.Log
+import androidx.lifecycle.lifecycleScope
 
 @UnstableApi
 class HomeActivity : AppCompatActivity() {
@@ -53,7 +56,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var tipCardsViewPager: ViewPager2
     private lateinit var bottomNavigation: BottomNavigationView
     private lateinit var adView: AdView
-    private var mInterstitialAd: InterstitialAd? = null
+    private lateinit var adManager: AdManager
     private var appOpenAd: AppOpenAd? = null
     private var isShowingAd = false
     
@@ -63,16 +66,22 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var videoPlayerHelper: VideoPlayerHelper
     private lateinit var quotesRecyclerView: RecyclerView
     private val quotesAdapter: QuoteAdapter by lazy { QuoteAdapter() }
+    private val TAG = "HomeActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
         // Initialize AdMob
-        MobileAds.initialize(this) { initializationStatus ->
-            // Initialization complete
-            loadAppOpenAd()
+        MobileAds.initialize(this) {
+            Log.d("AdMob", "Initialized")
         }
+
+        // Initialize AdManager using singleton instance
+        adManager = AdManager.getInstance(this)
+        
+        // Load initial interstitial ad
+        adManager.loadInterstitialAd()
 
         // Initialize VideoPlayerHelper
         videoPlayerHelper = VideoPlayerHelper.getInstance(this)
@@ -90,13 +99,9 @@ class HomeActivity : AppCompatActivity() {
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
 
-        // Load interstitial ad
-        loadInterstitialAd()
-
         // Load hero image with Coil
-        findViewById<ImageView>(R.id.heroImage).load("https://raw.githubusercontent.com/visiosoft/mypaperlessoffice.org/main/hero.png") {
+        findViewById<ImageView>(R.id.heroImage).load(R.drawable.hero_image) {
             crossfade(true)
-            error(R.drawable.hero_image)
             size(1080, 1920) // Load high resolution
         }
 
@@ -104,7 +109,7 @@ class HomeActivity : AppCompatActivity() {
         findViewById<ImageView>(R.id.heroPlayIcon).setOnClickListener {
             showInterstitialAd {
                 val intent = Intent(this, VideoPlayerActivity::class.java).apply {
-                    putExtra("videoUrl", "https://archive.org/serve/TikTok-7241210541224561946/7241210541224561946.ia.mp4")
+                    putExtra("videoUrl", "https://raw.githubusercontent.com/visiosoft/videostreaming/main/3.mp4")
                     putExtra("videoTitle", "Featured Magic Trick")
                 }
                 startActivity(intent)
@@ -191,43 +196,8 @@ class HomeActivity : AppCompatActivity() {
         appOpenAd?.show(this)
     }
 
-    private fun loadInterstitialAd() {
-        val adRequest = AdRequest.Builder().build()
-        InterstitialAd.load(
-            this,
-            AdMobConfig.getInterstitialAdUnitId(),
-            adRequest,
-            object : InterstitialAdLoadCallback() {
-                override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                    mInterstitialAd = interstitialAd
-                }
-
-                override fun onAdFailedToLoad(loadAdError: com.google.android.gms.ads.LoadAdError) {
-                    mInterstitialAd = null
-                }
-            }
-        )
-    }
-
     private fun showInterstitialAd(onAdClosed: () -> Unit) {
-        if (mInterstitialAd != null) {
-            mInterstitialAd?.fullScreenContentCallback = object : com.google.android.gms.ads.FullScreenContentCallback() {
-                override fun onAdDismissedFullScreenContent() {
-                    mInterstitialAd = null
-                    loadInterstitialAd() // Load the next interstitial
-                    onAdClosed()
-                }
-
-                override fun onAdFailedToShowFullScreenContent(adError: com.google.android.gms.ads.AdError) {
-                    mInterstitialAd = null
-                    loadInterstitialAd() // Load the next interstitial
-                    onAdClosed()
-                }
-            }
-            mInterstitialAd?.show(this)
-        } else {
-            onAdClosed()
-        }
+        adManager.showInterstitialAd(onAdClosed)
     }
 
     private fun setupAdapters() {
@@ -325,9 +295,20 @@ class HomeActivity : AppCompatActivity() {
         categoriesAdapter.submitList(categories)
 
         // Load trending tricks from JSON
-        val trendingTricks = TrickDataProvider.getTrendingTricks(this)
-        trendingAdapter.submitList(trendingTricks)
-        shortVideosAdapter.submitList(trendingTricks)
+        loadTricks()
+    }
+
+    private fun loadTricks() {
+        lifecycleScope.launch {
+            try {
+                val tricks = TrickDataProvider.getTrendingTricks(this@HomeActivity)
+                // Update UI with tricks
+                updateUI(tricks)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error loading tricks", e)
+                // Show error to user
+            }
+        }
     }
 
     private fun loadTricksForCategory(category: Category) {
@@ -402,6 +383,11 @@ class HomeActivity : AppCompatActivity() {
         }
 
         tipCardAdapter.submitList(tipCards)
+    }
+
+    private fun updateUI(tricks: List<Trick>) {
+        trendingAdapter.submitList(tricks)
+        shortVideosAdapter.submitList(tricks)
     }
 
     override fun onPause() {

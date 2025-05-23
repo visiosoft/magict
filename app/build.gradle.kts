@@ -15,8 +15,8 @@ android {
         applicationId = "upworksolutions.themagictricks"
         minSdk = 24
         targetSdk = 34
-        versionCode = 126
-        versionName = "126"
+        versionCode = 131
+        versionName = "131"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -32,6 +32,12 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            packaging {
+                resources {
+                    excludes += "/META-INF/{AL2.0,LGPL2.1}"
+                    pickFirsts += "tricks.json"
+                }
+            }
         }
         debug {
             isMinifyEnabled = false
@@ -71,6 +77,11 @@ android {
     // Add this to generate mapping files
     buildTypes.all {
         consumerProguardFiles("proguard-rules.pro")
+    }
+
+    // Add this to keep assets
+    aaptOptions {
+        noCompress("json")
     }
 }
 
