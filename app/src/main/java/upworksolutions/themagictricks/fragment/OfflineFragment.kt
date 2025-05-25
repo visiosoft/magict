@@ -50,7 +50,7 @@ class OfflineFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = VideoThumbnailAdapter(tricks as List<Any>) { item ->
+        adapter = VideoThumbnailAdapter(tricks as List<Any>, { item ->
             if (item is Trick) {
                 val intent = Intent(requireContext(), VideoPlayerActivity::class.java)
                 intent.putExtra("videoUrl", item.videoUrl)
@@ -63,7 +63,7 @@ class OfflineFragment : Fragment() {
                 intent.putExtra("difficulty", item.difficulty)
                 startActivity(intent)
             }
-        }
+        }, false)
         recyclerView.adapter = adapter
         loadOfflineTricks()
     }

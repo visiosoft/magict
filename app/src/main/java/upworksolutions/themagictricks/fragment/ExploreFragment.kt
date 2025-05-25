@@ -65,7 +65,7 @@ class ExploreFragment : Fragment() {
                     }
                 }
                 
-                binding.videosRecyclerView.adapter = VideoThumbnailAdapter(itemsWithAds) { item ->
+                binding.videosRecyclerView.adapter = VideoThumbnailAdapter(itemsWithAds, { item ->
                     if (item is Trick) {
                         // Open VideoPlayerActivity on click with video URL, title, and description
                         val intent = Intent(requireContext(), VideoPlayerActivity::class.java)
@@ -77,7 +77,7 @@ class ExploreFragment : Fragment() {
                         // Handle ad click
                         Toast.makeText(requireContext(), "Ad clicked", Toast.LENGTH_SHORT).show()
                     }
-                }
+                }, true)
             } catch (e: Exception) {
                 e.printStackTrace()
                 Log.e("ExploreFragment", "Error loading videos: ${e.message}", e)

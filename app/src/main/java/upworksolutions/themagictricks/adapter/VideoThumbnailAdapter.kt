@@ -27,7 +27,8 @@ import upworksolutions.themagictricks.R
 
 class VideoThumbnailAdapter(
     private val items: List<Any>,
-    private val onItemClick: (Any) -> Unit
+    private val onItemClick: (Any) -> Unit,
+    private val isExplore: Boolean = false // Add a flag to distinguish explore
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -35,17 +36,25 @@ class VideoThumbnailAdapter(
         private const val VIEW_TYPE_AD = 1
     }
 
+    // For offline (full) layout
     class TrickViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val thumbnailImageView: ImageView = view.findViewById(R.id.thumbnailImageView)
         val titleTextView: TextView = view.findViewById(R.id.titleTextView)
-        val subtitleTextView: TextView = view.findViewById(R.id.subtitleTextView)
+        val subtitleTextView: TextView? = view.findViewById(R.id.subtitleTextView)
         val descriptionTextView: TextView = view.findViewById(R.id.descriptionTextView)
-        val itemsNeededLayout: LinearLayout = view.findViewById(R.id.itemsNeededLayout)
-        val stepsLayout: LinearLayout = view.findViewById(R.id.stepsLayout)
-        val howItWorksTextView: TextView = view.findViewById(R.id.howItWorksTextView)
-        val difficultyTextView: TextView = view.findViewById(R.id.difficultyTextView)
-        val difficultyIcon: ImageView = view.findViewById(R.id.difficultyIcon)
-        val shareIcon: ImageView = view.findViewById(R.id.shareIcon)
+        val itemsNeededLayout: LinearLayout? = view.findViewById(R.id.itemsNeededLayout)
+        val stepsLayout: LinearLayout? = view.findViewById(R.id.stepsLayout)
+        val howItWorksTextView: TextView? = view.findViewById(R.id.howItWorksTextView)
+        val difficultyTextView: TextView? = view.findViewById(R.id.difficultyTextView)
+        val difficultyIcon: ImageView? = view.findViewById(R.id.difficultyIcon)
+        val shareIcon: ImageView? = view.findViewById(R.id.shareIcon)
+    }
+
+    // For explore (minimal) layout
+    class ExploreViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val thumbnailImageView: ImageView = view.findViewById(R.id.thumbnailImageView)
+        val titleTextView: TextView = view.findViewById(R.id.titleTextView)
+        val descriptionTextView: TextView = view.findViewById(R.id.descriptionTextView)
     }
 
     class AdViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -59,8 +68,13 @@ class VideoThumbnailAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             VIEW_TYPE_TRICK -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_video_thumbnail, parent, false)
-                TrickViewHolder(view)
+                if (isExplore) {
+                    val view = LayoutInflater.from(parent.context).inflate(R.layout.item_video_thumbnail_explore, parent, false)
+                    ExploreViewHolder(view)
+                } else {
+                    val view = LayoutInflater.from(parent.context).inflate(R.layout.item_video_thumbnail, parent, false)
+                    TrickViewHolder(view)
+                }
             }
             VIEW_TYPE_AD -> {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.item_native_ad_placeholder, parent, false)
@@ -72,6 +86,16 @@ class VideoThumbnailAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
+            is ExploreViewHolder -> {
+                val item = items[position / 2]
+                if (item is Trick) {
+                    Glide.with(holder.thumbnailImageView.context)
+                        .load(item.thumbnailUrl)
+                        .into(holder.thumbnailImageView)
+                    holder.titleTextView.text = item.title
+                    holder.descriptionTextView.text = item.description
+                }
+            }
             is TrickViewHolder -> {
                 val item = items[position / 2]
                 if (item is Trick) {
@@ -79,34 +103,38 @@ class VideoThumbnailAdapter(
                         .load(item.thumbnailUrl)
                         .into(holder.thumbnailImageView)
                     holder.titleTextView.text = item.title
-                    holder.subtitleTextView.text = item.subtitle
+                    holder.subtitleTextView?.text = item.subtitle
                     holder.descriptionTextView.text = item.description
                     // Bullet points for items needed
-                    holder.itemsNeededLayout.removeViews(1, holder.itemsNeededLayout.childCount - 1)
-                    item.itemsNeeded.forEach { needed ->
-                        val tv = TextView(holder.itemsNeededLayout.context)
-                        tv.text = "• $needed"
-                        tv.setTextColor(0xFF222222.toInt())
-                        tv.textSize = 14f
-                        tv.setPadding(16, 0, 0, 0)
-                        holder.itemsNeededLayout.addView(tv)
+                    holder.itemsNeededLayout?.let { layout ->
+                        if (layout.childCount > 1) layout.removeViews(1, layout.childCount - 1)
+                        item.itemsNeeded.forEach { needed ->
+                            val tv = TextView(layout.context)
+                            tv.text = "• $needed"
+                            tv.setTextColor(0xFF222222.toInt())
+                            tv.textSize = 14f
+                            tv.setPadding(16, 0, 0, 0)
+                            layout.addView(tv)
+                        }
                     }
                     // Bullet points for steps
-                    holder.stepsLayout.removeViews(1, holder.stepsLayout.childCount - 1)
-                    item.steps.forEachIndexed { idx, step ->
-                        val tv = TextView(holder.stepsLayout.context)
-                        tv.text = "${idx + 1}. $step"
-                        tv.setTextColor(0xFF333333.toInt())
-                        tv.textSize = 14f
-                        tv.setPadding(16, 0, 0, 0)
-                        holder.stepsLayout.addView(tv)
+                    holder.stepsLayout?.let { layout ->
+                        if (layout.childCount > 1) layout.removeViews(1, layout.childCount - 1)
+                        item.steps.forEachIndexed { idx, step ->
+                            val tv = TextView(layout.context)
+                            tv.text = "${idx + 1}. $step"
+                            tv.setTextColor(0xFF333333.toInt())
+                            tv.textSize = 14f
+                            tv.setPadding(16, 0, 0, 0)
+                            layout.addView(tv)
+                        }
                     }
-                    holder.howItWorksTextView.text = "How It Works: ${item.howItWorks}"
-                    holder.difficultyTextView.text = item.difficulty
+                    holder.howItWorksTextView?.text = "How It Works: ${item.howItWorks}"
+                    holder.difficultyTextView?.text = item.difficulty
                     // Remove item click
                     holder.itemView.setOnClickListener(null)
                     // Share icon click
-                    holder.shareIcon.setOnClickListener {
+                    holder.shareIcon?.setOnClickListener {
                         val context = holder.itemView.context
                         val shareText = buildString {
                             append("${item.title}\n")
