@@ -46,6 +46,7 @@ import upworksolutions.themagictricks.fragment.CategoryVideosFragment
 import upworksolutions.themagictricks.util.AdManager
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
+import upworksolutions.themagictricks.util.AppOpenAdManager
 
 @UnstableApi
 class HomeActivity : AppCompatActivity() {
@@ -57,7 +58,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var bottomNavigation: BottomNavigationView
     private lateinit var adView: AdView
     private lateinit var adManager: AdManager
-    private var appOpenAd: AppOpenAd? = null
+    private lateinit var appOpenAdManager: AppOpenAdManager
     private var isShowingAd = false
     
     private lateinit var categoriesAdapter: HorizontalCategoriesAdapter
@@ -79,9 +80,11 @@ class HomeActivity : AppCompatActivity() {
 
         // Initialize AdManager using singleton instance
         adManager = AdManager.getInstance(this)
+        appOpenAdManager = AppOpenAdManager.getInstance(this)
         
-        // Load initial interstitial ad
+        // Load initial ads
         adManager.loadInterstitialAd()
+        appOpenAdManager.loadAd()
 
         // Initialize VideoPlayerHelper
         videoPlayerHelper = VideoPlayerHelper.getInstance(this)
@@ -148,52 +151,6 @@ class HomeActivity : AppCompatActivity() {
 
         // Setup tip cards
         setupTipCards()
-    }
-
-    private fun loadAppOpenAd() {
-        val request = AdRequest.Builder().build()
-        AppOpenAd.load(
-            this,
-            AdMobConfig.getAppOpenAdUnitId(),
-            request,
-            AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
-            object : AppOpenAdLoadCallback() {
-                override fun onAdLoaded(ad: AppOpenAd) {
-                    appOpenAd = ad
-                    showAppOpenAd()
-                }
-
-                override fun onAdFailedToLoad(loadAdError: com.google.android.gms.ads.LoadAdError) {
-                    appOpenAd = null
-                }
-            }
-        )
-    }
-
-    private fun showAppOpenAd() {
-        if (isShowingAd) {
-            return
-        }
-
-        appOpenAd?.fullScreenContentCallback = object : com.google.android.gms.ads.FullScreenContentCallback() {
-            override fun onAdDismissedFullScreenContent() {
-                appOpenAd = null
-                isShowingAd = false
-                loadAppOpenAd()
-            }
-
-            override fun onAdFailedToShowFullScreenContent(adError: com.google.android.gms.ads.AdError) {
-                appOpenAd = null
-                isShowingAd = false
-                loadAppOpenAd()
-            }
-
-            override fun onAdShowedFullScreenContent() {
-                isShowingAd = true
-            }
-        }
-
-        appOpenAd?.show(this)
     }
 
     private fun showInterstitialAd(onAdClosed: () -> Unit) {
@@ -399,9 +356,7 @@ class HomeActivity : AppCompatActivity() {
         super.onResume()
         adView.resume()
         loadInitialData()
-        if (!isShowingAd) {
-            showAppOpenAd()
-        }
+        appOpenAdManager.showAdIfAvailable(this)
     }
 
     override fun onDestroy() {

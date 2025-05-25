@@ -2,7 +2,7 @@ package upworksolutions.themagictricks.util
 
 object AdMobConfig {
     // App ID
-    const val APP_ID = "ca-app-pub-9773068853653447~1453749099"
+    const val APP_ID = "ca-app-pub-9773068853653447~5630707376"
 
     // Test Ad Unit IDs
     object Test {

@@ -15,7 +15,7 @@ android {
         applicationId = "upworksolutions.themagictricks"
         minSdk = 24
         targetSdk = 34
-        versionCode = 131
+        versionCode = 135
         versionName = "131"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
