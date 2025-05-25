@@ -17,7 +17,7 @@ data class Trick(
     val isPro: Boolean = false,
     val isFeatured: Boolean = false,
     val difficulty: String = "Beginner",
-    val subtitle: String = "",
+    val subtitle: String? = null,
     val itemsNeeded: List<String> = emptyList(),
     val steps: List<String> = emptyList(),
     val howItWorks: String = ""
@@ -72,7 +72,7 @@ data class Trick(
                 isPro = data["isPro"] as? Boolean ?: false,
                 isFeatured = data["isFeatured"] as? Boolean ?: false,
                 difficulty = data["difficulty"] as? String ?: "Beginner",
-                subtitle = data["subtitle"] as? String ?: "",
+                subtitle = data["subtitle"] as? String,
                 itemsNeeded = (data["itemsNeeded"] as? List<*>)?.filterIsInstance<String>() ?: emptyList(),
                 steps = (data["steps"] as? List<*>)?.filterIsInstance<String>() ?: emptyList(),
                 howItWorks = data["howItWorks"] as? String ?: ""

@@ -30,12 +30,13 @@ class OfflineFragment : Fragment() {
         val id: Int,
         val title: String,
         val thumbnail: String,
-        val subtitle: String,
+        val subtitle: String?,
         val description: String,
         val items_needed: List<String>,
         val steps: List<String>,
         val how_it_works: String,
-        val difficulty: String
+        val difficulty: String,
+        val category: String
     )
 
     override fun onCreateView(
@@ -50,18 +51,31 @@ class OfflineFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = VideoThumbnailAdapter(tricks as List<Any>, { item ->
+        
+        // Create items list with ads
+        val itemsWithAds = mutableListOf<Any>()
+        tricks.forEachIndexed { index, trick ->
+            itemsWithAds.add(trick)
+            if ((index + 1) % 3 == 0) {
+                itemsWithAds.add("ad") // Placeholder for ad
+            }
+        }
+        
+        adapter = VideoThumbnailAdapter(itemsWithAds, { item ->
             if (item is Trick) {
                 val intent = Intent(requireContext(), VideoPlayerActivity::class.java)
                 intent.putExtra("videoUrl", item.videoUrl)
                 intent.putExtra("title", item.title)
                 intent.putExtra("description", item.description)
-                intent.putExtra("subtitle", item.subtitle)
+                intent.putExtra("subtitle", item.subtitle ?: "")
                 intent.putExtra("itemsNeeded", item.itemsNeeded.toTypedArray())
                 intent.putExtra("steps", item.steps.toTypedArray())
                 intent.putExtra("howItWorks", item.howItWorks)
                 intent.putExtra("difficulty", item.difficulty)
                 startActivity(intent)
+            } else {
+                // Handle ad click
+                Toast.makeText(requireContext(), "Ad clicked", Toast.LENGTH_SHORT).show()
             }
         }, false)
         recyclerView.adapter = adapter
@@ -72,28 +86,51 @@ class OfflineFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 val jsonString = requireContext().assets.open("offlinetricks.json").bufferedReader().use { it.readText() }
-                val type = object : TypeToken<OfflineTricksResponse>() {}.type
-                val response = Gson().fromJson<OfflineTricksResponse>(jsonString, type)
+                val response = Gson().fromJson(jsonString, OfflineTricksResponse::class.java)
+                
                 tricks.clear()
                 tricks.addAll(response.magic_tricks.map { offlineTrick ->
                     Trick(
                         id = offlineTrick.id.toString(),
-                        title = offlineTrick.title ?: "",
-                        description = offlineTrick.description ?: "",
-                        videoUrl = "file:///android_asset/offline_videos/${offlineTrick.id}.mp4",
-                        thumbnailUrl = offlineTrick.thumbnail ?: "",
-                        duration = 0,
-                        categories = emptyList(),
-                        isPro = false,
-                        isFeatured = false,
-                        difficulty = offlineTrick.difficulty ?: "",
-                        subtitle = offlineTrick.subtitle ?: "",
-                        itemsNeeded = offlineTrick.items_needed ?: emptyList(),
-                        steps = offlineTrick.steps ?: emptyList(),
-                        howItWorks = offlineTrick.how_it_works ?: ""
+                        title = offlineTrick.title,
+                        thumbnailUrl = offlineTrick.thumbnail,
+                        subtitle = offlineTrick.subtitle,
+                        description = offlineTrick.description,
+                        itemsNeeded = offlineTrick.items_needed,
+                        steps = offlineTrick.steps,
+                        howItWorks = offlineTrick.how_it_works,
+                        difficulty = offlineTrick.difficulty,
+                        videoUrl = "" // Offline tricks don't have video URLs
                     )
                 })
-                adapter.notifyDataSetChanged()
+                
+                // Update adapter with new items including ads
+                val itemsWithAds = mutableListOf<Any>()
+                tricks.forEachIndexed { index, trick ->
+                    itemsWithAds.add(trick)
+                    if ((index + 1) % 3 == 0) {
+                        itemsWithAds.add("ad") // Placeholder for ad
+                    }
+                }
+                adapter = VideoThumbnailAdapter(itemsWithAds, { item ->
+                    if (item is Trick) {
+                        val intent = Intent(requireContext(), VideoPlayerActivity::class.java)
+                        intent.putExtra("videoUrl", item.videoUrl)
+                        intent.putExtra("title", item.title)
+                        intent.putExtra("description", item.description)
+                        intent.putExtra("subtitle", item.subtitle ?: "")
+                        intent.putExtra("itemsNeeded", item.itemsNeeded.toTypedArray())
+                        intent.putExtra("steps", item.steps.toTypedArray())
+                        intent.putExtra("howItWorks", item.howItWorks)
+                        intent.putExtra("difficulty", item.difficulty)
+                        startActivity(intent)
+                    } else {
+                        // Handle ad click
+                        Toast.makeText(requireContext(), "Ad clicked", Toast.LENGTH_SHORT).show()
+                    }
+                }, false)
+                recyclerView.adapter = adapter
+                
             } catch (e: Exception) {
                 e.printStackTrace()
                 Log.e("OfflineFragment", "Error loading offline tricks: ${e.message}", e)

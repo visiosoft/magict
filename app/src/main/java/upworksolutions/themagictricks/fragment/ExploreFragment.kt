@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
 import android.content.Intent
 import upworksolutions.themagictricks.activity.VideoPlayerActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
 
 class ExploreFragment : Fragment() {
     private var _binding: FragmentExploreBinding? = null
@@ -44,7 +45,25 @@ class ExploreFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        binding.videosRecyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        binding.videosRecyclerView.apply {
+            // Set fixed size for better performance
+            setHasFixedSize(true)
+            
+            // Enable view cache
+            setItemViewCacheSize(20)
+            
+            // Optimize layout manager
+            layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).apply {
+                isItemPrefetchEnabled = true
+            }
+            
+            // Reduce overdraw
+            isDrawingCacheEnabled = true
+            drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
+            
+            // Disable predictive animations
+            (itemAnimator as? DefaultItemAnimator)?.supportsChangeAnimations = false
+        }
         
         lifecycleScope.launch {
             try {

@@ -4,6 +4,9 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
+import android.text.Html
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +17,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
@@ -21,199 +26,175 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import upworksolutions.themagictricks.databinding.ItemVideoThumbnailBinding
+import upworksolutions.themagictricks.databinding.ItemVideoThumbnailExploreBinding
 import upworksolutions.themagictricks.model.Trick
 import upworksolutions.themagictricks.util.AdMobConfig
 import upworksolutions.themagictricks.R
+import android.text.SpannableStringBuilder
+import android.text.SpannableString
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
+import android.graphics.Color
+import android.graphics.Typeface
+import android.text.Spannable
+import android.util.Log
 
 class VideoThumbnailAdapter(
     private val items: List<Any>,
     private val onItemClick: (Any) -> Unit,
-    private val isExplore: Boolean = false // Add a flag to distinguish explore
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val isExplore: Boolean = false
+) : RecyclerView.Adapter<VideoThumbnailAdapter.ViewHolder>() {
 
-    companion object {
-        private const val VIEW_TYPE_TRICK = 0
-        private const val VIEW_TYPE_AD = 1
+    private val viewPool = RecyclerView.RecycledViewPool().apply {
+        setMaxRecycledViews(0, 20)
     }
 
-    // For offline (full) layout
-    class TrickViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val thumbnailImageView: ImageView = view.findViewById(R.id.thumbnailImageView)
-        val titleTextView: TextView = view.findViewById(R.id.titleTextView)
-        val subtitleTextView: TextView? = view.findViewById(R.id.subtitleTextView)
-        val descriptionTextView: TextView = view.findViewById(R.id.descriptionTextView)
-        val itemsNeededLayout: LinearLayout? = view.findViewById(R.id.itemsNeededLayout)
-        val stepsLayout: LinearLayout? = view.findViewById(R.id.stepsLayout)
-        val howItWorksTextView: TextView? = view.findViewById(R.id.howItWorksTextView)
-        val difficultyTextView: TextView? = view.findViewById(R.id.difficultyTextView)
-        val difficultyIcon: ImageView? = view.findViewById(R.id.difficultyIcon)
-        val shareIcon: ImageView? = view.findViewById(R.id.shareIcon)
+    private var adLoader: AdLoader? = null
+
+    class ViewHolder(val binding: ItemVideoThumbnailExploreBinding) : RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = ItemVideoThumbnailExploreBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        
+        // Initialize AdLoader if not already initialized
+        if (adLoader == null) {
+            adLoader = AdLoader.Builder(parent.context, AdMobConfig.getNativeAdvancedAdUnitId())
+                .forNativeAd { nativeAd ->
+                    // Find the position for this ad
+                    val position = items.indexOfFirst { it is String && it == "ad" }
+                    if (position != -1) {
+                        // Replace the placeholder with the actual ad
+                        (items as MutableList)[position] = nativeAd
+                        notifyItemChanged(position)
+                    }
+                }
+                .withAdListener(object : AdListener() {
+                    override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                        Log.e("VideoThumbnailAdapter", "Native ad failed to load: ${loadAdError.message}")
+                    }
+                })
+                .build()
+        }
+        
+        return ViewHolder(binding)
     }
 
-    // For explore (minimal) layout
-    class ExploreViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val thumbnailImageView: ImageView = view.findViewById(R.id.thumbnailImageView)
-        val titleTextView: TextView = view.findViewById(R.id.titleTextView)
-        val descriptionTextView: TextView = view.findViewById(R.id.descriptionTextView)
-    }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val item = items[position]
+        
+        if (item is Trick) {
+            // Load thumbnail with Glide optimizations
+            Glide.with(holder.itemView.context)
+                .load(item.thumbnailUrl)
+                .thumbnail(0.1f)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.binding.thumbnailImageView)
 
-    class AdViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val nativeAdView: NativeAdView = view.findViewById(R.id.native_ad_view)
-    }
+            // Set title
+            holder.binding.titleTextView.text = item.title
+            
+            // Set description based on fragment type
+            if (isExplore) {
+                holder.binding.descriptionTextView.text = item.description
+                holder.binding.descriptionTextView.maxLines = 2
+                holder.binding.descriptionTextView.ellipsize = TextUtils.TruncateAt.END
+                
+                // Show play icon and make clickable only in explore mode
+                holder.binding.playIconImageView.visibility = View.VISIBLE
+                holder.itemView.setOnClickListener {
+                    onItemClick(item)
+                }
+            } else {
+                // For offline fragment, show full details with formatted sections
+                val spannableString = SpannableStringBuilder()
 
-    override fun getItemViewType(position: Int): Int {
-        return if (position % 2 == 0) VIEW_TYPE_TRICK else VIEW_TYPE_AD
-    }
+                // Description section
+                spannableString.append("Description:\n")
+                spannableString.append(item.description)
+                spannableString.append("\n\n")
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
-            VIEW_TYPE_TRICK -> {
-                if (isExplore) {
-                    val view = LayoutInflater.from(parent.context).inflate(R.layout.item_video_thumbnail_explore, parent, false)
-                    ExploreViewHolder(view)
-                } else {
-                    val view = LayoutInflater.from(parent.context).inflate(R.layout.item_video_thumbnail, parent, false)
-                    TrickViewHolder(view)
+                // How It Works section
+                spannableString.append("How It Works:\n")
+                spannableString.append(item.howItWorks)
+                spannableString.append("\n\n")
+
+                // Steps section
+                spannableString.append("Steps:\n")
+                item.steps.forEachIndexed { index, step ->
+                    spannableString.append("${index + 1}. $step\n")
+                }
+
+                // Apply styles
+                val text = spannableString.toString()
+                val styledText = SpannableString(text)
+
+                // Style section headers
+                val headerStyle = StyleSpan(Typeface.BOLD)
+                val headerColor = ForegroundColorSpan(Color.parseColor("#1A1A1A"))
+                val contentColor = ForegroundColorSpan(Color.parseColor("#333333"))
+
+                // Apply styles to all text first
+                styledText.setSpan(contentColor, 0, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                // Then apply header styles
+                text.split("\n").forEachIndexed { _, line ->
+                    if (line.endsWith(":")) {
+                        val start = text.indexOf(line)
+                        val end = start + line.length
+                        styledText.setSpan(headerStyle, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        styledText.setSpan(headerColor, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    }
+                }
+
+                holder.binding.descriptionTextView.text = styledText
+                holder.binding.descriptionTextView.maxLines = Int.MAX_VALUE
+                holder.binding.descriptionTextView.ellipsize = null
+                
+                // Hide play icon and make non-clickable in offline mode
+                holder.binding.playIconImageView.visibility = View.GONE
+                holder.itemView.setOnClickListener(null)
+            }
+        } else if (item is NativeAd) {
+            // Handle native ad
+            holder.binding.thumbnailImageView.setImageDrawable(null)
+            holder.binding.titleTextView.text = item.headline
+            holder.binding.descriptionTextView.text = item.body
+            
+            // Load ad icon if available
+            item.icon?.drawable?.let { drawable ->
+                holder.binding.thumbnailImageView.setImageDrawable(drawable)
+            }
+            
+            // Set click listener
+            holder.itemView.setOnClickListener {
+                item.callToAction?.let { callToAction ->
+                    onItemClick(callToAction)
                 }
             }
-            VIEW_TYPE_AD -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_native_ad_placeholder, parent, false)
-                AdViewHolder(view)
-            }
-            else -> throw IllegalArgumentException("Invalid view type")
+        } else if (item is String && item == "ad") {
+            // Load a new native ad
+            val adRequest = AdRequest.Builder().build()
+            adLoader?.loadAd(adRequest)
+            
+            // Show placeholder
+            holder.binding.thumbnailImageView.setImageResource(R.drawable.ad_placeholder)
+            holder.binding.titleTextView.text = "Loading Ad..."
+            holder.binding.descriptionTextView.text = "Please wait while we load the advertisement"
+            holder.itemView.setOnClickListener(null)
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is ExploreViewHolder -> {
-                val item = items[position / 2]
-                if (item is Trick) {
-                    Glide.with(holder.thumbnailImageView.context)
-                        .load(item.thumbnailUrl)
-                        .into(holder.thumbnailImageView)
-                    holder.titleTextView.text = item.title
-                    holder.descriptionTextView.text = item.description
-                }
-            }
-            is TrickViewHolder -> {
-                val item = items[position / 2]
-                if (item is Trick) {
-                    Glide.with(holder.thumbnailImageView.context)
-                        .load(item.thumbnailUrl)
-                        .into(holder.thumbnailImageView)
-                    holder.titleTextView.text = item.title
-                    holder.subtitleTextView?.text = item.subtitle
-                    holder.descriptionTextView.text = item.description
-                    // Bullet points for items needed
-                    holder.itemsNeededLayout?.let { layout ->
-                        if (layout.childCount > 1) layout.removeViews(1, layout.childCount - 1)
-                        item.itemsNeeded.forEach { needed ->
-                            val tv = TextView(layout.context)
-                            tv.text = "• $needed"
-                            tv.setTextColor(0xFF222222.toInt())
-                            tv.textSize = 14f
-                            tv.setPadding(16, 0, 0, 0)
-                            layout.addView(tv)
-                        }
-                    }
-                    // Bullet points for steps
-                    holder.stepsLayout?.let { layout ->
-                        if (layout.childCount > 1) layout.removeViews(1, layout.childCount - 1)
-                        item.steps.forEachIndexed { idx, step ->
-                            val tv = TextView(layout.context)
-                            tv.text = "${idx + 1}. $step"
-                            tv.setTextColor(0xFF333333.toInt())
-                            tv.textSize = 14f
-                            tv.setPadding(16, 0, 0, 0)
-                            layout.addView(tv)
-                        }
-                    }
-                    holder.howItWorksTextView?.text = "How It Works: ${item.howItWorks}"
-                    holder.difficultyTextView?.text = item.difficulty
-                    // Remove item click
-                    holder.itemView.setOnClickListener(null)
-                    // Share icon click
-                    holder.shareIcon?.setOnClickListener {
-                        val context = holder.itemView.context
-                        val shareText = buildString {
-                            append("${item.title}\n")
-                            if (item.subtitle.isNotBlank()) append("${item.subtitle}\n")
-                            if (item.description.isNotBlank()) append("${item.description}\n")
-                            if (item.itemsNeeded.isNotEmpty()) append("Items Needed: ${item.itemsNeeded.joinToString(", ")}\n")
-                            if (item.steps.isNotEmpty()) append("Steps:\n${item.steps.mapIndexed { i, s -> "${i+1}. $s" }.joinToString("\n")}\n")
-                            if (item.howItWorks.isNotBlank()) append("How It Works: ${item.howItWorks}\n")
-                            if (item.difficulty.isNotBlank()) append("Difficulty: ${item.difficulty}\n")
-                        }
-                        // Copy to clipboard
-                        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                        val clip = ClipData.newPlainText("Magic Trick", shareText)
-                        clipboard.setPrimaryClip(clip)
-                        Toast.makeText(context, "Copied to clipboard!", Toast.LENGTH_SHORT).show()
-                        // Share intent
-                        val shareIntent = Intent(Intent.ACTION_SEND)
-                        shareIntent.type = "text/plain"
-                        shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
-                        context.startActivity(Intent.createChooser(shareIntent, "Share Trick"))
-                    }
-                }
-            }
-            is AdViewHolder -> {
-                // Load real native ad
-                val adLoader = AdLoader.Builder(holder.itemView.context, AdMobConfig.getNativeAdvancedAdUnitId())
-                    .forNativeAd { nativeAd: NativeAd ->
-                        // Populate the native ad view
-                        val adView = holder.nativeAdView
-                        adView.headlineView = adView.findViewById(R.id.ad_headline)
-                        adView.bodyView = adView.findViewById(R.id.ad_body)
-                        adView.callToActionView = adView.findViewById(R.id.ad_call_to_action)
-                        adView.iconView = adView.findViewById(R.id.ad_icon)
-
-                        // Set the headline
-                        (adView.headlineView as TextView).text = nativeAd.headline
-                        adView.headlineView?.visibility = View.VISIBLE
-
-                        // Set the body
-                        if (nativeAd.body == null) {
-                            adView.bodyView?.visibility = View.INVISIBLE
-                        } else {
-                            adView.bodyView?.visibility = View.VISIBLE
-                            (adView.bodyView as TextView).text = nativeAd.body
-                        }
-
-                        // Set the call to action
-                        if (nativeAd.callToAction == null) {
-                            adView.callToActionView?.visibility = View.INVISIBLE
-                        } else {
-                            adView.callToActionView?.visibility = View.VISIBLE
-                            (adView.callToActionView as Button).text = nativeAd.callToAction
-                        }
-
-                        // Set the icon
-                        if (nativeAd.icon == null) {
-                            adView.iconView?.visibility = View.GONE
-                        } else {
-                            (adView.iconView as ImageView).setImageDrawable(nativeAd.icon?.drawable)
-                            adView.iconView?.visibility = View.VISIBLE
-                        }
-
-                        // Set the native ad
-                        adView.setNativeAd(nativeAd)
-                    }
-                    .withAdListener(object : AdListener() {
-                        override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                            // Handle ad load failure
-                            Toast.makeText(holder.itemView.context, "Ad failed to load: ${loadAdError.message}", Toast.LENGTH_SHORT).show()
-                        }
-                    })
-                    .build()
-
-                adLoader.loadAd(AdRequest.Builder().build())
-            }
-        }
+    override fun onViewRecycled(holder: ViewHolder) {
+        super.onViewRecycled(holder)
+        // Clear Glide load when view is recycled
+        Glide.with(holder.itemView.context).clear(holder.binding.thumbnailImageView)
     }
 
-    override fun getItemCount(): Int {
-        return items.size * 2
-    }
+    override fun getItemCount() = items.size
 } 
