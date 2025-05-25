@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import upworksolutions.themagictricks.R
 import upworksolutions.themagictricks.activity.VideoPlayerActivity
 import upworksolutions.themagictricks.databinding.FragmentHomeBinding
 
@@ -38,6 +40,10 @@ class HomeFragment : Fragment() {
             // Start the activity and finish the current one
             startActivity(intent)
             requireActivity().finishAffinity()
+        }
+
+        binding.btnOffline.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_offlineFragment)
         }
     }
 } 

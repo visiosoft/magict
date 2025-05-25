@@ -48,6 +48,7 @@ import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import upworksolutions.themagictricks.util.AppOpenAdManager
 import upworksolutions.themagictricks.fragment.ExploreFragment
+import upworksolutions.themagictricks.fragment.OfflineFragment
 
 @UnstableApi
 class HomeActivity : AppCompatActivity() {
@@ -240,6 +241,14 @@ class HomeActivity : AppCompatActivity() {
                 }
                 R.id.navigation_practice -> {
                     // TODO: Navigate to practice
+                    true
+                }
+                R.id.navigation_offline -> {
+                    val fragment = OfflineFragment()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, fragment)
+                        .addToBackStack(null)
+                        .commit()
                     true
                 }
                 else -> false

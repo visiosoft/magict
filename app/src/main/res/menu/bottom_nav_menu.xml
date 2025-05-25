@@ -16,4 +16,8 @@
         android:id="@+id/navigation_practice"
         android:icon="@drawable/ic_practice"
         android:title="Practice" />
+    <item
+        android:id="@+id/navigation_offline"
+        android:icon="@drawable/ic_offline"
+        android:title="Offline" />
 </menu> 
