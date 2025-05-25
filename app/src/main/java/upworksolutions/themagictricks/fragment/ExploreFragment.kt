@@ -57,9 +57,11 @@ class ExploreFragment : Fragment() {
                 }
                 
                 binding.videosRecyclerView.adapter = VideoThumbnailAdapter(tricks) { trick ->
-                    // Open VideoPlayerActivity on click with video URL
+                    // Open VideoPlayerActivity on click with video URL, title, and description
                     val intent = Intent(requireContext(), VideoPlayerActivity::class.java)
                     intent.putExtra("videoUrl", trick.videoUrl)
+                    intent.putExtra("title", trick.title)
+                    intent.putExtra("description", trick.description)
                     startActivity(intent)
                 }
             } catch (e: Exception) {
