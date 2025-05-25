@@ -61,7 +61,7 @@
     {
       "id": 4,
       "title": "The Appearing Coin",
-      "thumbnail": "https://example.com/images/appearing-coin-thumb.jpg",
+      "thumbnail": "https://i.ytimg.com/vi/Gw78f513CNI/hq720.jpg",
       "description": "Make a coin magically appear in someone's hands.",
       "items_needed": [
         "A coin"
@@ -79,7 +79,7 @@
     {
       "id": 5,
       "title": "The Sliced Banana Magic Trick",
-      "thumbnail": "https://example.com/images/sliced-banana-thumb.jpg",
+      "thumbnail": "https://i.ytimg.com/vi/zTMmc6R5qdQ/hq720.jpg",
       "description": "A banana that appears pre-sliced inside its peel.",
       "items_needed": [
         "Banana",
@@ -97,7 +97,7 @@
     {
       "id": 6,
       "title": "Find Any Card (Marked Deck)",
-      "thumbnail": "https://example.com/images/marked-card-thumb.jpg",
+      "thumbnail": "https://i.ytimg.com/vi/j8FrHhAKGJA/hq720.jpg",
       "description": "Locate a spectator's chosen card using a simple marking system.",
       "items_needed": [
         "Deck of cards",
@@ -117,7 +117,7 @@
     {
       "id": 7,
       "title": "Find Any Card (One-Way Deck)",
-      "thumbnail": "https://example.com/images/one-way-deck-thumb.jpg",
+      "thumbnail": "https://i.ytimg.com/vi/aKTZs3Q8QIc/hq720.jpg",
       "description": "Locate a card using a one-way design principle.",
       "items_needed": [
         "Deck with one-way back design"
@@ -136,7 +136,7 @@
     {
       "id": 8,
       "title": "The Rising Card",
-      "thumbnail": "https://example.com/images/rising-card-thumb.jpg",
+      "thumbnail": "https://i.ytimg.com/vi/0V9qnde2Rcc/hq720.jpg",
       "description": "Make a chosen card rise mysteriously from the deck.",
       "items_needed": [
         "Deck of cards"
@@ -166,7 +166,7 @@
       "Easy",
       "Medium"
     ],
-    "image_base_url": "https://example.com/images/",
+    "image_base_url": "WXRFODEWwyc",
     "image_sizes": {
       "thumbnail": "300x200",
       "detail": "800x600"
