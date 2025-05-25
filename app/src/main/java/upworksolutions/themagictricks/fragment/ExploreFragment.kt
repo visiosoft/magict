@@ -56,13 +56,27 @@ class ExploreFragment : Fragment() {
                     Toast.makeText(requireContext(), "Loaded ${tricks.size} videos", Toast.LENGTH_SHORT).show()
                 }
                 
-                binding.videosRecyclerView.adapter = VideoThumbnailAdapter(tricks) { trick ->
-                    // Open VideoPlayerActivity on click with video URL, title, and description
-                    val intent = Intent(requireContext(), VideoPlayerActivity::class.java)
-                    intent.putExtra("videoUrl", trick.videoUrl)
-                    intent.putExtra("title", trick.title)
-                    intent.putExtra("description", trick.description)
-                    startActivity(intent)
+                // Insert ad thumbnails every three videos
+                val itemsWithAds = mutableListOf<Any>()
+                tricks.forEachIndexed { index, trick ->
+                    itemsWithAds.add(trick)
+                    if ((index + 1) % 3 == 0) {
+                        itemsWithAds.add("ad") // Placeholder for ad
+                    }
+                }
+                
+                binding.videosRecyclerView.adapter = VideoThumbnailAdapter(itemsWithAds) { item ->
+                    if (item is Trick) {
+                        // Open VideoPlayerActivity on click with video URL, title, and description
+                        val intent = Intent(requireContext(), VideoPlayerActivity::class.java)
+                        intent.putExtra("videoUrl", item.videoUrl)
+                        intent.putExtra("title", item.title)
+                        intent.putExtra("description", item.description)
+                        startActivity(intent)
+                    } else {
+                        // Handle ad click
+                        Toast.makeText(requireContext(), "Ad clicked", Toast.LENGTH_SHORT).show()
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
