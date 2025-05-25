@@ -17,6 +17,8 @@ import android.util.Log
 import upworksolutions.themagictricks.data.TrickDataProvider
 import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
+import android.content.Intent
+import upworksolutions.themagictricks.activity.VideoPlayerActivity
 
 class ExploreFragment : Fragment() {
     private var _binding: FragmentExploreBinding? = null
@@ -55,12 +57,10 @@ class ExploreFragment : Fragment() {
                 }
                 
                 binding.videosRecyclerView.adapter = VideoThumbnailAdapter(tricks) { trick ->
-                    // Handle trick click - navigate to video player
-                    val fragment = VideoPlayerFragment.newInstance(trick)
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainer, fragment)
-                        .addToBackStack(null)
-                        .commit()
+                    // Open VideoPlayerActivity on click with video URL
+                    val intent = Intent(requireContext(), VideoPlayerActivity::class.java)
+                    intent.putExtra("videoUrl", trick.videoUrl)
+                    startActivity(intent)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
