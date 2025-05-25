@@ -1,0 +1,175 @@
+{
+  "magic_tricks": [
+    {
+      "id": 1,
+      "title": "The Sticky Pencil",
+      "thumbnail": "https://example.com/images/sticky-pencil-thumb.jpg",
+      "subtitle": "Learn the Magnetic Pencil Trick: A Simple Illusion to Wow Your Friends",
+      "description": "A beginner-friendly sleight-of-hand trick that makes a pencil appear to stick to your wrist.",
+      "items_needed": [
+        "A standard pencil",
+        "A watch with a snug strap",
+        "A live audience (or pet)"
+      ],
+      "steps": [
+        "Secretly secure a second pencil behind the watch strap",
+        "Hold a visible pencil in line with the hidden one",
+        "Pretend the pencil is sticking magnetically to your wrist",
+        "Reveal with dramatic flair"
+      ],
+      "how_it_works": "Relies on hidden pencil placement and audience distraction.",
+      "difficulty": "Easy",
+      "category": "Sleight of Hand"
+    },
+    {
+      "id": 2,
+      "title": "The Disappearing Coin",
+      "thumbnail": "https://example.com/images/disappearing-coin-thumb.jpg",
+      "description": "Make a coin vanish using simple sticky tape.",
+      "items_needed": [
+        "A coin",
+        "Double-sided sticky tape"
+      ],
+      "steps": [
+        "Stick the coin to the back of your hand with tape",
+        "Pretend to grab it with your other hand",
+        "Lower your taped hand casually",
+        "For reappearing: pretend to catch it and reveal on hand"
+      ],
+      "how_it_works": "The coin remains hidden on the back of your hand throughout.",
+      "difficulty": "Easy",
+      "category": "Coin Magic"
+    },
+    {
+      "id": 3,
+      "title": "Spinning Straw Illusion",
+      "thumbnail": "https://example.com/images/spinning-straw-thumb.jpg",
+      "description": "Make a straw spin using static electricity.",
+      "items_needed": [
+        "Plastic bottle",
+        "Straw with paper wrapper"
+      ],
+      "steps": [
+        "Rub straw to build static electricity",
+        "Balance it on bottle opening",
+        "Wave hands nearby to make it spin"
+      ],
+      "how_it_works": "Static electricity causes the straw to rotate.",
+      "difficulty": "Easy",
+      "category": "Science Trick"
+    },
+    {
+      "id": 4,
+      "title": "The Appearing Coin",
+      "thumbnail": "https://example.com/images/appearing-coin-thumb.jpg",
+      "description": "Make a coin magically appear in someone's hands.",
+      "items_needed": [
+        "A coin"
+      ],
+      "steps": [
+        "Secretly balance coin on your head",
+        "Have spectator cup their hands",
+        "Tilt head to drop coin into their hands",
+        "Act surprised at the 'magic'"
+      ],
+      "how_it_works": "Coin is secretly dropped from hidden position.",
+      "difficulty": "Easy",
+      "category": "Coin Magic"
+    },
+    {
+      "id": 5,
+      "title": "The Sliced Banana Magic Trick",
+      "thumbnail": "https://example.com/images/sliced-banana-thumb.jpg",
+      "description": "A banana that appears pre-sliced inside its peel.",
+      "items_needed": [
+        "Banana",
+        "Needle"
+      ],
+      "steps": [
+        "Before performing, use needle to slice banana inside peel",
+        "When ready, peel banana to reveal slices",
+        "Act surprised at the 'magic'"
+      ],
+      "how_it_works": "Banana is pre-cut while peel remains intact.",
+      "difficulty": "Easy",
+      "category": "Food Magic"
+    },
+    {
+      "id": 6,
+      "title": "Find Any Card (Marked Deck)",
+      "thumbnail": "https://example.com/images/marked-card-thumb.jpg",
+      "description": "Locate a spectator's chosen card using a simple marking system.",
+      "items_needed": [
+        "Deck of cards",
+        "Pencil"
+      ],
+      "steps": [
+        "Mark one card subtly with pencil dot",
+        "Place marked card at bottom",
+        "Have spectator choose and return card",
+        "Cut deck to place their card next to marked one",
+        "Find marked card to locate theirs"
+      ],
+      "how_it_works": "Uses a key card system to track selection.",
+      "difficulty": "Medium",
+      "category": "Card Magic"
+    },
+    {
+      "id": 7,
+      "title": "Find Any Card (One-Way Deck)",
+      "thumbnail": "https://example.com/images/one-way-deck-thumb.jpg",
+      "description": "Locate a card using a one-way design principle.",
+      "items_needed": [
+        "Deck with one-way back design"
+      ],
+      "steps": [
+        "Ensure all cards face same direction initially",
+        "Have spectator select card",
+        "Secretly rotate entire deck while they look at card",
+        "Have them return card (now reversed)",
+        "Spread deck to find the differently-oriented card"
+      ],
+      "how_it_works": "Uses the principle of one-way deck designs.",
+      "difficulty": "Medium",
+      "category": "Card Magic"
+    },
+    {
+      "id": 8,
+      "title": "The Rising Card",
+      "thumbnail": "https://example.com/images/rising-card-thumb.jpg",
+      "description": "Make a chosen card rise mysteriously from the deck.",
+      "items_needed": [
+        "Deck of cards"
+      ],
+      "steps": [
+        "Control chosen card to top of deck",
+        "Hold deck facing audience in left hand",
+        "Use right pinky to push card up from behind",
+        "Make rising motion with index finger",
+        "Remove card when halfway out"
+      ],
+      "how_it_works": "Uses finger pressure to make card appear to rise on its own.",
+      "difficulty": "Medium",
+      "category": "Card Magic"
+    }
+  ],
+  "metadata": {
+    "total_tricks": 8,
+    "categories": [
+      "Sleight of Hand",
+      "Coin Magic",
+      "Science Trick",
+      "Food Magic",
+      "Card Magic"
+    ],
+    "difficulty_levels": [
+      "Easy",
+      "Medium"
+    ],
+    "image_base_url": "https://example.com/images/",
+    "image_sizes": {
+      "thumbnail": "300x200",
+      "detail": "800x600"
+    }
+  }
+}
