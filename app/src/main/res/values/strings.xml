@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Magic Tricks</string>
+    <string name="app_name">The Magic Tricks</string>
     <string name="category_icon">Category icon</string>
     <string name="trick_thumbnail">Trick thumbnail</string>
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="title_home">Home</string>
+    <string name="title_explore">Explore</string>
+    <string name="title_offline">Offline</string>
+    <string name="title_profile">Profile</string>
 </resources>

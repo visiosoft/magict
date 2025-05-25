@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="upworksolutions.themagictricks.fragment.HomeFragment"
+        android:label="@string/title_home" />
+
+    <fragment
+        android:id="@+id/navigation_explore"
+        android:name="upworksolutions.themagictricks.fragment.ExploreFragment"
+        android:label="@string/title_explore" />
+
+    <fragment
+        android:id="@+id/navigation_offline"
+        android:name="upworksolutions.themagictricks.fragment.OfflineFragment"
+        android:label="@string/title_offline" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="upworksolutions.themagictricks.fragment.ProfileFragment"
+        android:label="@string/title_profile" />
+
+</navigation> 

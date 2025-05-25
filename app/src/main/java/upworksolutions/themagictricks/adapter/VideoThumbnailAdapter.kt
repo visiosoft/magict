@@ -1,11 +1,16 @@
 package upworksolutions.themagictricks.adapter
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.gms.ads.AdListener
@@ -34,6 +39,7 @@ class VideoThumbnailAdapter(
         val howItWorksTextView: TextView = view.findViewById(R.id.howItWorksTextView)
         val difficultyTextView: TextView = view.findViewById(R.id.difficultyTextView)
         val difficultyIcon: ImageView = view.findViewById(R.id.difficultyIcon)
+        val shareIcon: ImageView = view.findViewById(R.id.shareIcon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -73,7 +79,30 @@ class VideoThumbnailAdapter(
             holder.howItWorksTextView.text = "How It Works: ${item.howItWorks}"
             holder.difficultyTextView.text = item.difficulty
             // Optionally, set icon tint or image based on difficulty
-            holder.itemView.setOnClickListener { onItemClick(item) }
+            holder.itemView.setOnClickListener(null)
+            // Share icon click
+            holder.shareIcon.setOnClickListener {
+                val context = holder.itemView.context
+                val shareText = buildString {
+                    append("${item.title}\n")
+                    if (item.subtitle.isNotBlank()) append("${item.subtitle}\n")
+                    if (item.description.isNotBlank()) append("${item.description}\n")
+                    if (item.itemsNeeded.isNotEmpty()) append("Items Needed: ${item.itemsNeeded.joinToString(", ")}\n")
+                    if (item.steps.isNotEmpty()) append("Steps:\n${item.steps.mapIndexed { i, s -> "${i+1}. $s" }.joinToString("\n")}\n")
+                    if (item.howItWorks.isNotBlank()) append("How It Works: ${item.howItWorks}\n")
+                    if (item.difficulty.isNotBlank()) append("Difficulty: ${item.difficulty}\n")
+                }
+                // Copy to clipboard
+                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("Magic Trick", shareText)
+                clipboard.setPrimaryClip(clip)
+                Toast.makeText(context, "Copied to clipboard!", Toast.LENGTH_SHORT).show()
+                // Share intent
+                val shareIntent = Intent(Intent.ACTION_SEND)
+                shareIntent.type = "text/plain"
+                shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
+                context.startActivity(Intent.createChooser(shareIntent, "Share Trick"))
+            }
         }
     }
 

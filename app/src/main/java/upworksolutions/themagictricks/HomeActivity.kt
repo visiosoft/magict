@@ -49,6 +49,8 @@ import androidx.lifecycle.lifecycleScope
 import upworksolutions.themagictricks.util.AppOpenAdManager
 import upworksolutions.themagictricks.fragment.ExploreFragment
 import upworksolutions.themagictricks.fragment.OfflineFragment
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
 
 @UnstableApi
 class HomeActivity : AppCompatActivity() {
@@ -223,7 +225,6 @@ class HomeActivity : AppCompatActivity() {
         bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
-                    // Clear back stack and show home content
                     supportFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     true
                 }
@@ -235,20 +236,16 @@ class HomeActivity : AppCompatActivity() {
                         .commit()
                     true
                 }
-                R.id.navigation_favorites -> {
-                    // TODO: Navigate to favorites
-                    true
-                }
-                R.id.navigation_practice -> {
-                    // TODO: Navigate to practice
-                    true
-                }
                 R.id.navigation_offline -> {
                     val fragment = OfflineFragment()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragmentContainer, fragment)
                         .addToBackStack(null)
                         .commit()
+                    true
+                }
+                R.id.navigation_profile -> {
+                    // TODO: Navigate to profile
                     true
                 }
                 else -> false
