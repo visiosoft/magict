@@ -4,8 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import upworksolutions.themagictricks.R
+import upworksolutions.themagictricks.adapter.VideoThumbnailAdapter
 import upworksolutions.themagictricks.databinding.FragmentExploreBinding
+import upworksolutions.themagictricks.model.Trick
+import android.util.Log
+import upworksolutions.themagictricks.data.TrickDataProvider
+import kotlinx.coroutines.launch
+import androidx.lifecycle.lifecycleScope
 
 class ExploreFragment : Fragment() {
     private var _binding: FragmentExploreBinding? = null
@@ -23,14 +34,40 @@ class ExploreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupViews()
+        setupRecyclerView()
     }
 
     private fun setupViews() {
-        // You can add any view setup or click listeners here
-        binding.tvTitle.text = "Explore Magic Tricks"
-        binding.tvSubtitle.text = "Discover Amazing Magic Tricks"
-        binding.tvDescription.text = "Welcome to the Explore section! Here you'll find a collection of amazing magic tricks, tutorials, and performances. Browse through different categories and discover new tricks to learn and master."
-        binding.tvCategories.text = "Categories:\n• Card Tricks\n• Coin Magic\n• Street Magic\n• Mentalism\n• Close-up Magic"
+        // Removed text setup
+    }
+
+    private fun setupRecyclerView() {
+        binding.videosRecyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        
+        lifecycleScope.launch {
+            try {
+                val tricks = TrickDataProvider.getTrendingTricks(requireContext())
+                
+                if (tricks.isEmpty()) {
+                    Toast.makeText(requireContext(), "No videos found", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "Loaded ${tricks.size} videos", Toast.LENGTH_SHORT).show()
+                }
+                
+                binding.videosRecyclerView.adapter = VideoThumbnailAdapter(tricks) { trick ->
+                    // Handle trick click - navigate to video player
+                    val fragment = VideoPlayerFragment.newInstance(trick)
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, fragment)
+                        .addToBackStack(null)
+                        .commit()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("ExploreFragment", "Error loading videos: ${e.message}", e)
+                Toast.makeText(requireContext(), "Error loading videos: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onDestroyView() {
