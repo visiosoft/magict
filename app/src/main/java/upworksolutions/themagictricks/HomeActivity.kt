@@ -370,14 +370,15 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun showReviewDialog() {
-        appReviewManager.requestReviewFlow()
-            .addOnSuccessListener { reviewInfo ->
-                appReviewManager.launchReviewFlow(this, reviewInfo)
-            }
-            .addOnFailureListener { e ->
+        lifecycleScope.launch {
+            try {
+                val reviewInfo = appReviewManager.requestReviewFlow()
+                appReviewManager.launchReviewFlow(this@HomeActivity, reviewInfo)
+            } catch (e: Exception) {
                 // Handle the error
-                Toast.makeText(this, "Could not request review. Please try again later.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@HomeActivity, "Could not request review. Please try again later.", Toast.LENGTH_SHORT).show()
             }
+        }
     }
 
     override fun onPause() {

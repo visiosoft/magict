@@ -6,13 +6,13 @@ import android.widget.Toast
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
-import com.google.android.play.core.tasks.Task
+import kotlinx.coroutines.tasks.await
 
 class AppReviewManager(private val context: Context) {
     private val reviewManager: ReviewManager = ReviewManagerFactory.create(context)
 
-    fun requestReviewFlow(): Task<ReviewInfo> {
-        return reviewManager.requestReviewFlow()
+    suspend fun requestReviewFlow(): ReviewInfo {
+        return reviewManager.requestReviewFlow().await()
     }
 
     fun launchReviewFlow(activity: Activity, reviewInfo: ReviewInfo) {
