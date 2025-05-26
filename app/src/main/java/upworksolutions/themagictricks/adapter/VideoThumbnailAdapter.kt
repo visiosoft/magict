@@ -171,10 +171,31 @@ class VideoThumbnailAdapter(
                 holder.binding.thumbnailImageView.setImageDrawable(drawable)
             }
             
-            // Set click listener
+            // Hide play icon for ads
+            holder.binding.playIconImageView.visibility = View.GONE
+            
+            // Set click listener for the entire ad view
             holder.itemView.setOnClickListener {
+                // Show loading indicator
+                holder.binding.titleTextView.text = "Opening..."
+                holder.binding.descriptionTextView.text = "Please wait while we open the advertisement"
+                
+                // Handle ad click
                 item.callToAction?.let { callToAction ->
-                    onItemClick(callToAction)
+                    try {
+                        // Log the ad click
+                        Log.d("VideoThumbnailAdapter", "Ad clicked: ${item.headline}")
+                        
+                        // Trigger the ad click
+                        onItemClick(callToAction)
+                    } catch (e: Exception) {
+                        // Handle any errors
+                        Log.e("VideoThumbnailAdapter", "Error handling ad click: ${e.message}")
+                        
+                        // Reset the ad view
+                        holder.binding.titleTextView.text = item.headline
+                        holder.binding.descriptionTextView.text = item.body
+                    }
                 }
             }
         } else if (item is String && item == "ad") {
@@ -182,10 +203,15 @@ class VideoThumbnailAdapter(
             val adRequest = AdRequest.Builder().build()
             adLoader?.loadAd(adRequest)
             
-            // Show placeholder
+            // Show placeholder with clear ad indication
             holder.binding.thumbnailImageView.setImageResource(R.drawable.ad_placeholder)
-            holder.binding.titleTextView.text = "Loading Ad..."
-            holder.binding.descriptionTextView.text = "Please wait while we load the advertisement"
+            holder.binding.titleTextView.text = "Advertisement"
+            holder.binding.descriptionTextView.text = "Loading sponsored content..."
+            
+            // Ensure play icon is hidden for ad placeholder
+            holder.binding.playIconImageView.visibility = View.GONE
+            
+            // Make placeholder non-clickable
             holder.itemView.setOnClickListener(null)
         }
     }

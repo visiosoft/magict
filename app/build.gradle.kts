@@ -14,9 +14,9 @@ android {
     defaultConfig {
         applicationId = "upworksolutions.themagictricks"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 135
-        versionName = "135"
+        targetSdk  = 34
+        versionCode = 138
+        versionName = "138"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -152,4 +152,8 @@ dependencies {
 
     // Coil
     implementation("io.coil-kt:coil:2.5.0")
+
+    // Play Core Library
+    implementation("com.google.android.play:core:1.10.3")
+    implementation("com.google.android.play:core-ktx:1.8.1")
 }

@@ -51,6 +51,8 @@ import upworksolutions.themagictricks.fragment.ExploreFragment
 import upworksolutions.themagictricks.fragment.OfflineFragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import android.widget.ImageButton
+import upworksolutions.themagictricks.util.AppReviewManager
 
 @UnstableApi
 class HomeActivity : AppCompatActivity() {
@@ -72,6 +74,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var quotesRecyclerView: RecyclerView
     private val quotesAdapter: QuoteAdapter by lazy { QuoteAdapter() }
     private val TAG = "HomeActivity"
+    private lateinit var appReviewManager: AppReviewManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -155,6 +158,13 @@ class HomeActivity : AppCompatActivity() {
 
         // Setup tip cards
         setupTipCards()
+
+        appReviewManager = AppReviewManager(this)
+
+        // Set up heart icon click listener
+        findViewById<ImageButton>(R.id.profileButton).setOnClickListener {
+            showReviewDialog()
+        }
     }
 
     private fun showInterstitialAd(onAdClosed: () -> Unit) {
@@ -357,6 +367,17 @@ class HomeActivity : AppCompatActivity() {
     private fun updateUI(tricks: List<Trick>) {
         trendingAdapter.submitList(tricks)
         shortVideosAdapter.submitList(tricks)
+    }
+
+    private fun showReviewDialog() {
+        appReviewManager.requestReviewFlow()
+            .addOnSuccessListener { reviewInfo ->
+                appReviewManager.launchReviewFlow(this, reviewInfo)
+            }
+            .addOnFailureListener { e ->
+                // Handle the error
+                Toast.makeText(this, "Could not request review. Please try again later.", Toast.LENGTH_SHORT).show()
+            }
     }
 
     override fun onPause() {

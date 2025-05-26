@@ -23,7 +23,7 @@ object AdMobConfig {
     }
 
     // Current environment
-    private const val IS_TESTING = false
+    private const val IS_TESTING = true
 
     // Get current ad unit IDs based on environment
     fun getBannerAdUnitId(): String {

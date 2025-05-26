@@ -36,12 +36,7 @@ class ExploreFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupViews()
         setupRecyclerView()
-    }
-
-    private fun setupViews() {
-        // Removed text setup
     }
 
     private fun setupRecyclerView() {
@@ -70,37 +65,38 @@ class ExploreFragment : Fragment() {
                 val tricks = TrickDataProvider.getTrendingTricks(requireContext())
                 
                 if (tricks.isEmpty()) {
-                    Toast.makeText(requireContext(), "No videos found", Toast.LENGTH_SHORT).show()
+                    binding.emptyStateView.visibility = View.VISIBLE
+                    binding.videosRecyclerView.visibility = View.GONE
                 } else {
-                    Toast.makeText(requireContext(), "Loaded ${tricks.size} videos", Toast.LENGTH_SHORT).show()
-                }
-                
-                // Insert ad thumbnails every three videos
-                val itemsWithAds = mutableListOf<Any>()
-                tricks.forEachIndexed { index, trick ->
-                    itemsWithAds.add(trick)
-                    if ((index + 1) % 3 == 0) {
-                        itemsWithAds.add("ad") // Placeholder for ad
+                    binding.emptyStateView.visibility = View.GONE
+                    binding.videosRecyclerView.visibility = View.VISIBLE
+                    
+                    // Insert ad thumbnails every three videos
+                    val itemsWithAds = mutableListOf<Any>()
+                    tricks.forEachIndexed { index, trick ->
+                        itemsWithAds.add(trick)
+                        if ((index + 1) % 3 == 0) {
+                            itemsWithAds.add("ad") // Placeholder for ad
+                        }
                     }
+                    
+                    binding.videosRecyclerView.adapter = VideoThumbnailAdapter(itemsWithAds, { item ->
+                        if (item is Trick) {
+                            // Open VideoPlayerActivity on click with video URL, title, and description
+                            val intent = Intent(requireContext(), VideoPlayerActivity::class.java)
+                            intent.putExtra("videoUrl", item.videoUrl)
+                            intent.putExtra("title", item.title)
+                            intent.putExtra("description", item.description)
+                            startActivity(intent)
+                        }
+                        // Ad clicks are handled in the adapter
+                    }, true)
                 }
-                
-                binding.videosRecyclerView.adapter = VideoThumbnailAdapter(itemsWithAds, { item ->
-                    if (item is Trick) {
-                        // Open VideoPlayerActivity on click with video URL, title, and description
-                        val intent = Intent(requireContext(), VideoPlayerActivity::class.java)
-                        intent.putExtra("videoUrl", item.videoUrl)
-                        intent.putExtra("title", item.title)
-                        intent.putExtra("description", item.description)
-                        startActivity(intent)
-                    } else {
-                        // Handle ad click
-                        Toast.makeText(requireContext(), "Ad clicked", Toast.LENGTH_SHORT).show()
-                    }
-                }, true)
             } catch (e: Exception) {
-                e.printStackTrace()
                 Log.e("ExploreFragment", "Error loading videos: ${e.message}", e)
-                Toast.makeText(requireContext(), "Error loading videos: ${e.message}", Toast.LENGTH_SHORT).show()
+                binding.emptyStateView.visibility = View.VISIBLE
+                binding.videosRecyclerView.visibility = View.GONE
+                Toast.makeText(requireContext(), "Error loading videos. Please try again later.", Toast.LENGTH_SHORT).show()
             }
         }
     }

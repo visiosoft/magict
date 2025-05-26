@@ -62,7 +62,8 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="8dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_profile"
+                    android:src="@drawable/ic_heart"
+                    android:tint="@color/white"
                     android:contentDescription="Profile" />
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
