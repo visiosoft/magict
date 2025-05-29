@@ -18,9 +18,10 @@ import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
 import android.content.Intent
 import upworksolutions.themagictricks.activity.VideoPlayerActivity
+import upworksolutions.themagictricks.data.OfflineTrickDataProvider
 
 class OfflineFragment : Fragment() {
-
+    private val TAG = "OfflineFragment"
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: VideoThumbnailAdapter
     private val tricks = mutableListOf<Trick>()
@@ -85,24 +86,10 @@ class OfflineFragment : Fragment() {
     private fun loadOfflineTricks() {
         lifecycleScope.launch {
             try {
-                val jsonString = requireContext().assets.open("offlinetricks.json").bufferedReader().use { it.readText() }
-                val response = Gson().fromJson(jsonString, OfflineTricksResponse::class.java)
+                val offlineTricks = OfflineTrickDataProvider.getOfflineTricks(requireContext())
                 
                 tricks.clear()
-                tricks.addAll(response.magic_tricks.map { offlineTrick ->
-                    Trick(
-                        id = offlineTrick.id.toString(),
-                        title = offlineTrick.title,
-                        thumbnailUrl = offlineTrick.thumbnail,
-                        subtitle = offlineTrick.subtitle,
-                        description = offlineTrick.description,
-                        itemsNeeded = offlineTrick.items_needed,
-                        steps = offlineTrick.steps,
-                        howItWorks = offlineTrick.how_it_works,
-                        difficulty = offlineTrick.difficulty,
-                        videoUrl = "" // Offline tricks don't have video URLs
-                    )
-                })
+                tricks.addAll(offlineTricks)
                 
                 // Update adapter with new items including ads
                 val itemsWithAds = mutableListOf<Any>()
@@ -115,26 +102,14 @@ class OfflineFragment : Fragment() {
                 adapter = VideoThumbnailAdapter(itemsWithAds, { item ->
                     if (item is Trick) {
                         val intent = Intent(requireContext(), VideoPlayerActivity::class.java)
-                        intent.putExtra("videoUrl", item.videoUrl)
-                        intent.putExtra("title", item.title)
-                        intent.putExtra("description", item.description)
-                        intent.putExtra("subtitle", item.subtitle ?: "")
-                        intent.putExtra("itemsNeeded", item.itemsNeeded.toTypedArray())
-                        intent.putExtra("steps", item.steps.toTypedArray())
-                        intent.putExtra("howItWorks", item.howItWorks)
-                        intent.putExtra("difficulty", item.difficulty)
+                        intent.putExtra("trick", item)
                         startActivity(intent)
-                    } else {
-                        // Handle ad click
-                        Toast.makeText(requireContext(), "Ad clicked", Toast.LENGTH_SHORT).show()
                     }
-                }, false)
+                })
                 recyclerView.adapter = adapter
-                
             } catch (e: Exception) {
-                e.printStackTrace()
-                Log.e("OfflineFragment", "Error loading offline tricks: ${e.message}", e)
-                Toast.makeText(requireContext(), "Error loading offline tricks: ${e.message}", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "Error loading offline tricks", e)
+                // Show error to user
             }
         }
     }
