@@ -211,6 +211,9 @@ class VideoThumbnailAdapter(
             // Ensure play icon is hidden for ad placeholder
             holder.binding.playIconImageView.visibility = View.GONE
             
+            // Remove gradient overlay for ad placeholder
+            holder.binding.root.findViewById<View>(R.id.gradientOverlay)?.visibility = View.GONE
+            
             // Make placeholder non-clickable
             holder.itemView.setOnClickListener(null)
         }

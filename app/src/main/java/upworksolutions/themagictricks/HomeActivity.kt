@@ -53,6 +53,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import android.widget.ImageButton
 import upworksolutions.themagictricks.util.AppReviewManager
+import android.view.View
 
 @UnstableApi
 class HomeActivity : AppCompatActivity() {
@@ -71,8 +72,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var trendingAdapter: VideoTrickAdapter
     private lateinit var shortVideosAdapter: VideoTrickAdapter
     private lateinit var videoPlayerHelper: VideoPlayerHelper
-    private lateinit var quotesRecyclerView: RecyclerView
-    private val quotesAdapter: QuoteAdapter by lazy { QuoteAdapter() }
     private val TAG = "HomeActivity"
     private lateinit var appReviewManager: AppReviewManager
 
@@ -103,7 +102,6 @@ class HomeActivity : AppCompatActivity() {
         tipCardsViewPager = findViewById(R.id.tipCardsViewPager)
         bottomNavigation = findViewById(R.id.bottomNavigation)
         adView = findViewById(R.id.adView)
-        quotesRecyclerView = findViewById(R.id.quotesRecyclerView)
 
         // Load banner ad
         val adRequest = AdRequest.Builder().build()
@@ -152,9 +150,6 @@ class HomeActivity : AppCompatActivity() {
         
         // Load initial data
         loadInitialData()
-
-        // Setup quotes
-        setupQuotes()
 
         // Setup tip cards
         setupTipCards()
@@ -221,24 +216,20 @@ class HomeActivity : AppCompatActivity() {
             setHasFixedSize(true)
             addItemDecoration(HorizontalSpaceItemDecoration(8))
         }
-
-        // Setup Quotes RecyclerView (no auto-scrolling)
-        quotesRecyclerView.apply {
-            layoutManager = LinearLayoutManager(this@HomeActivity, LinearLayoutManager.HORIZONTAL, false)
-            adapter = quotesAdapter
-            setHasFixedSize(true)
-            addItemDecoration(HorizontalSpaceItemDecoration(8))
-        }
     }
 
     private fun setupBottomNavigation() {
         bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
+                    // Show home content
+                    findViewById<View>(R.id.homeContent).visibility = View.VISIBLE
                     supportFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     true
                 }
                 R.id.navigation_explore -> {
+                    // Hide home content
+                    findViewById<View>(R.id.homeContent).visibility = View.GONE
                     val fragment = ExploreFragment()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragmentContainer, fragment)
@@ -247,6 +238,8 @@ class HomeActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_offline -> {
+                    // Hide home content
+                    findViewById<View>(R.id.homeContent).visibility = View.GONE
                     val fragment = OfflineFragment()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragmentContainer, fragment)
@@ -294,18 +287,6 @@ class HomeActivity : AppCompatActivity() {
         // TODO: Implement category filtering
     }
 
-    private fun setupQuotes() {
-        quotesRecyclerView.apply {
-            layoutManager = LinearLayoutManager(
-                this@HomeActivity,
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
-            adapter = quotesAdapter
-            addItemDecoration(HorizontalSpaceItemDecoration(resources.getDimensionPixelSize(R.dimen.recycler_item_spacing)))
-        }
-    }
-
     private fun setupTipCards() {
         val tipCards = listOf(
             TipCard(
@@ -336,12 +317,17 @@ class HomeActivity : AppCompatActivity() {
 
         val tipCardAdapter = TipCardAdapter(
             onCardClick = { card ->
-                // Handle card click - show detailed view
+                // Show interstitial ad and navigate to OfflineFragment
                 showInterstitialAd {
-                    val intent = Intent(this, TipDetailActivity::class.java).apply {
-                        putExtra("tip_card", card)
-                    }
-                    startActivity(intent)
+                    // Hide home content
+                    findViewById<View>(R.id.homeContent).visibility = View.GONE
+                    
+                    // Add OfflineFragment
+                    val fragment = OfflineFragment()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, fragment)
+                        .addToBackStack(null)
+                        .commit()
                 }
             },
             onFavoriteClick = { card ->

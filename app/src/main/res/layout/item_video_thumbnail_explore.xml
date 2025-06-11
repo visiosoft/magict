@@ -28,6 +28,7 @@
                 android:contentDescription="Thumbnail" />
 
             <View
+                android:id="@+id/gradientOverlay"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:layout_gravity="bottom"

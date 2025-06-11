@@ -76,7 +76,9 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <!-- Home Content -->
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/homeContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -239,32 +241,7 @@
                     android:paddingEnd="16dp"
                     android:layout_marginBottom="24dp"/>
 
-                <!-- Tip of the Day Card -->
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="32dp"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/quotesRecyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:clipToPadding="false"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"/>
-
-                </FrameLayout>
-
-                <!-- Extra space at the bottom -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"/>
-
             </LinearLayout>
-
         </androidx.core.widget.NestedScrollView>
 
     </FrameLayout>
@@ -276,8 +253,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="#1A1A24"
+        app:menu="@menu/bottom_nav_menu"
         app:itemIconTint="@color/white"
-        app:itemTextColor="@color/white"
-        app:menu="@menu/bottom_nav_menu"/>
+        app:itemTextColor="@color/white"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout> 

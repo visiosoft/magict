@@ -43,6 +43,7 @@ class TipCardAdapter(
         private val difficultyText: TextView = itemView.findViewById(R.id.difficultyText)
         private val secretTipText: TextView = itemView.findViewById(R.id.secretTipText)
         private val favoriteButton: ImageButton = itemView.findViewById(R.id.favoriteButton)
+        private val cardView: androidx.cardview.widget.CardView = itemView as androidx.cardview.widget.CardView
 
         fun bind(card: TipCard) {
             titleText.text = card.title
@@ -62,11 +63,14 @@ class TipCardAdapter(
             )
 
             // Set click listeners
-            itemView.setOnClickListener { onCardClick(card) }
-            favoriteButton.setOnClickListener { onFavoriteClick(card) }
+            cardView.setOnClickListener { onCardClick(card) }
+            favoriteButton.setOnClickListener { 
+                it.isClickable = true
+                onFavoriteClick(card)
+            }
 
             // Add swipe up/down animation for secret tip
-            itemView.setOnTouchListener { view, event ->
+            cardView.setOnTouchListener { view, event ->
                 when (event.action) {
                     android.view.MotionEvent.ACTION_UP -> {
                         if (event.historySize > 0) {
